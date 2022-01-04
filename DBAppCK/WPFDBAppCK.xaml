@@ -1,0 +1,118 @@
+﻿<Window x:Class="DBAppCK.WPFDBAppCK"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"        
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        TextOptions.TextFormattingMode="Display"    
+        TextOptions.TextRenderingMode="Auto" 
+        xmlns:local="clr-namespace:DBAppCK"
+        mc:Ignorable="d"
+        Title="WPFDBAppCK" Height="650" Width="1000" Background="#FF75C3FF" FontFamily="Arial" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" Grid.Row="0" MinWidth="125">
+            <Label Margin="10" HorizontalAlignment="Center">Search by:</Label>
+            <ComboBox x:Name="searchList" SelectionChanged="searchList_SelectionChanged">
+                <ComboBoxItem x:Name="itemInComboBox">
+                    <TextBlock x:Name="PlannedWeekChoosen" FontWeight="SemiBold" Foreground="BlueViolet">Planned Week</TextBlock>
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Actual Week</TextBlock>
+
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    
+                        <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Weight</TextBlock>
+                    
+                </ComboBoxItem>
+                <ComboBoxItem>
+                   
+                        <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Order</TextBlock>
+                    
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    
+                        <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Client Name</TextBlock>
+                    
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    
+                        <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Name</TextBlock>
+                    
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    
+                        <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Quantity</TextBlock>
+                    
+                </ComboBoxItem>
+
+            </ComboBox>
+            <TextBox x:Name="SearchItems" MinWidth="100" Background="LightBlue" />
+            <Button Content="Search" Margin="5" Background="DarkCyan" Click="Button_Click"/>
+            <TextBlock Margin="10" HorizontalAlignment="Center">Menu 1</TextBlock>
+            <TextBlock Margin="10" HorizontalAlignment="Center">Menu 2</TextBlock>
+            <TextBlock Margin="10" HorizontalAlignment="Center">Menu 3</TextBlock>
+        </StackPanel>
+        <DataGrid x:Name="MainDatabaseXAML" Grid.Column="1" Grid.Row="0"  
+                  Margin="10" HorizontalAlignment="Stretch" 
+                  SelectionChanged="MainDatabaseXAML_SelectionChanged" CanUserDeleteRows="False" 
+                  CanUserAddRows="False" VerticalAlignment="Center" MinWidth="500" MinHeight="500" 
+                  Background="#FFB2FFEC" AutoGenerateColumns="False">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Unique Id" Binding="{Binding Id}"/>
+                <DataGridTextColumn Header="Planned Week" Binding="{Binding Planned_Week}"/>
+                <DataGridTextColumn Header="Actual Week" Binding="{Binding Actual_Week}"/>
+                <DataGridTextColumn Header="Weight" Binding="{Binding Weight}"/>
+                <DataGridTextColumn Header="Order" Binding="{Binding Order}"/>
+                <DataGridTextColumn Header="Client Name" Binding="{Binding Client_Name}"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <GridSplitter Grid.Column="0" Background="DarkBlue" HorizontalAlignment="Right" Width="2"/>
+
+
+        <Label Content="Enter Planned Week" Grid.Row="4" Grid.Column="1"  HorizontalAlignment="Left" Width="125" Background="#FF428AFF" FontStretch="Normal"/>
+        <Label Content="Enter Actual Week" Grid.Row="4" Grid.Column="1" Margin="125,0,0,0" Width="125" HorizontalAlignment="Left" Background="#FF428AFF"/>
+        <Label Content="Enter Weight" Grid.Row="4" Grid.Column="1" Margin="250,0,0,0" Width="125" HorizontalAlignment="Left" Background="#FF428AFF"/>
+        <Label Content="Enter Order" Grid.Row="4" Grid.Column="1" Margin="375,0,0,0" Width="125" HorizontalAlignment="Left" Background="#FF428AFF"/>
+        <Label Content="Enter Client Name" Grid.Row="4" Grid.Column="1" Margin="500,0,0,0" Width="125" HorizontalAlignment="Left" Background="#FF428AFF"/>
+        <Label Content="Enter Name" Grid.Row="4" Grid.Column="1" Margin="625,0,0,0" Width="125" HorizontalAlignment="Left" Background="#FF428AFF"/>
+        <Label Content="Enter Quantity" Grid.Row="4" Grid.Column="1" Margin="750,0,0,0" Width="125" HorizontalAlignment="Left" Background="#FF428AFF"/>
+
+
+        <TextBox  x:Name="TextElementPlannedWeek" MinWidth="100" Grid.Row="5" Grid.Column="1"  HorizontalAlignment="Left" Width="125" Background="LightBlue"/>
+        <TextBox  TextWrapping="Wrap" x:Name="TextElementActualWeek" MinWidth="100" Grid.Row="5" Grid.Column="1" Margin="125,0,0,0" Width="125" HorizontalAlignment="Left" Background="LightBlue"/>
+        <TextBox  x:Name="TextElementWeight" MinWidth="100" Grid.Row="5" Grid.Column="1" Margin="250,0,0,0" Width="125" HorizontalAlignment="Left" Background="LightBlue"/>
+        <TextBox  x:Name="TextElementOrder" MinWidth="100" Grid.Row="5" Grid.Column="1" Margin="375,0,0,0" Width="125" HorizontalAlignment="Left" Background="LightBlue"/>
+        <TextBox  x:Name="TextElementClientName" MinWidth="100" Grid.Row="5" Grid.Column="1" Margin="500,0,0,0" Width="125" HorizontalAlignment="Left" Background="LightBlue"/>
+        <TextBox  x:Name="TextElementName" MinWidth="100" Grid.Row="5" Grid.Column="1" Margin="625,0,0,0" Width="125" HorizontalAlignment="Left" Background="LightBlue"/>
+        <TextBox  x:Name="TextElementQuantity" MinWidth="100" Grid.Row="5" Grid.Column="1" Margin="750,0,0,0" Width="125" HorizontalAlignment="Left" Background="LightBlue"/>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Center">
+            <Button Content="Add New Element" x:Name="AddElementToGrid" Background="#FF25E854" Click="AddNewElementToGrid_Click"/>
+            <Button Content="Show Data Base" x:Name="RunDB" Background="White" Click="RunDB_Click"/>
+            <Button Content="Delete Selected Record" x:Name="DeleteRecord" Background="#FFE4503F" Click="DeleteRecord_Click"/>
+            <Button Content="Update" x:Name="Update" Background="#FFFFF966" Click="Update_Click"/>
+        </StackPanel>
+
+    </Grid>
+</Window>
