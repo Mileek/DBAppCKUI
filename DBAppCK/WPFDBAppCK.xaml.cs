@@ -24,12 +24,18 @@ namespace DBAppCK
     /// Logika interakcji dla klasy WPFDBAppCK.xaml
     /// </summary>
 
+    //
+    //Unique ID don't need to be "Recycled" and the amount of unique records is so big that it is not necessary.
+    //
+
     public partial class WPFDBAppCK : Window
     {
         public List<MainTable> newSourceFile = new List<MainTable>(); //Public variable that store list from external excel file
+        
         public WPFDBAppCK()
         {
-            InitializeComponent();            
+            InitializeComponent();
+
         }
 
 
@@ -57,7 +63,7 @@ namespace DBAppCK
                         this.MainDatabaseXAML.ItemsSource = entities.MainTables.ToList();
                     }
                 }
-                
+
 
             }
 
@@ -91,11 +97,12 @@ namespace DBAppCK
                             Weight = Convert.ToDouble(TextElementWeight.Text),
                             Order = TextElementOrder.Text,
                             Client_Name = TextElementClientName.Text,
-                            Name = TextElementName.Text,
+                            Name = TextElementName.Text,                            
                             Quantity = Convert.ToInt32(TextElementQuantity.Text)
                         };
                         if (newSourceFile.Count == 0) //Dependency wheter open was clicked or not
                         {
+
                             entities.MainTables.Add(mainTableAdd);
                             entities.SaveChanges();
                         }
@@ -117,7 +124,7 @@ namespace DBAppCK
                 if (newSourceFile.Count == 0)
                 {
                     //Work on base database in entity
-                    var elements = from el in entities.MainTables select el; //fcn to show all elements in datagrid
+                    var elements = from el in entities.MainTables orderby el.Actual_Week ascending select el; //fcn to show all elements in datagrid
                     MainDatabaseXAML.ItemsSource = elements.ToList(); // displaying everything as list
                 }
                 else
@@ -145,7 +152,7 @@ namespace DBAppCK
                     entities.SaveChanges();
 
                     //Displaying
-                    var elements = from el in entities.MainTables select el; //fcn to show all elements in datagrid
+                    var elements = from el in entities.MainTables orderby el.Actual_Week ascending select el; //fcn to show all elements in datagrid
                     MainDatabaseXAML.ItemsSource = elements.ToList(); // displaying everything as list 
                 }
                 else
@@ -179,7 +186,7 @@ namespace DBAppCK
                         mainTableUpdate.Client_Name = TextElementClientName.Text;
                         mainTableUpdate.Name = TextElementName.Text;
                         mainTableUpdate.Quantity = Convert.ToInt32(TextElementQuantity.Text);
-                        
+
 
                         entities.SaveChanges();
 
@@ -192,7 +199,7 @@ namespace DBAppCK
                         TextElementQuantity.Text = string.Empty;
 
                         //Displaying
-                        var elements = from el in entities.MainTables select el; //fcn to show all elements in datagrid
+                        var elements = from el in entities.MainTables orderby el.Actual_Week ascending select el; //fcn to show all elements in datagrid
                         MainDatabaseXAML.ItemsSource = elements.ToList(); // displaying everything as list
 
                         entities.Dispose();
@@ -396,6 +403,11 @@ namespace DBAppCK
 
         private void SaveAs_Click(object sender, RoutedEventArgs e)
         {
+
+            //
+            //Still async implementation needed
+            //
+
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "Excel|*.xlsx";
             saveFileDialog.ShowDialog(); //Display File dialog with possible file format (Excel only)
@@ -509,9 +521,42 @@ namespace DBAppCK
             }
         }
 
-        private void MainDatabaseXAML_CurrentCellChanged(object sender, EventArgs e)
+       
+        private void Finished_Click(object sender, RoutedEventArgs e)
         {
             
+        }
+
+        private void FinishedChecker_Click(object sender, RoutedEventArgs e)
+        {
+
+            using (MainDataBaseEntities entities = new MainDataBaseEntities())
+            {
+                
+                MainTable mainTableCheck = (MainTable)MainDatabaseXAML.SelectedItem;
+
+                mainTableCheck.IsFinished = mainTableCheck.IsFinished.Value;
+                entities.MainTables.Attach(mainTableCheck);
+                entities.MainTables.Remove(mainTableCheck);
+
+                entities.SaveChanges();
+                entities.MainTables.Add(mainTableCheck);
+                entities.SaveChanges();
+
+                //Displaying
+                var elements = from el in entities.MainTables orderby el.Actual_Week ascending select el;
+                MainDatabaseXAML.ItemsSource = elements.ToList();
+
+                entities.Dispose();
+
+
+                //entities.Entry(mainTableCheck).CurrentValues.SetValues(mainTableCheck.IsFinished.Value);
+                //entities.SaveChanges();
+
+
+            }
+
+
         }
     }
 }

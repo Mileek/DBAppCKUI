@@ -82,7 +82,7 @@
                   Margin="10" HorizontalAlignment="Stretch" 
                   SelectionChanged="MainDatabaseXAML_SelectionChanged" CanUserDeleteRows="False" 
                   CanUserAddRows="False" VerticalAlignment="Center" MinWidth="500" MinHeight="500" 
-                  Background="#FFB2FFEC" AutoGenerateColumns="False" CurrentCellChanged="MainDatabaseXAML_CurrentCellChanged" >
+                  Background="#FFB2FFEC" AutoGenerateColumns="False" >
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Unique Id" Binding="{Binding Id}"/>
@@ -93,7 +93,13 @@
                 <DataGridTextColumn Header="Client Name" MinWidth="100" Binding="{Binding Client_Name}"/>
                 <DataGridTextColumn Header="Name" MinWidth="100" Binding="{Binding Name}"/>
                 <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}"/>
-                <DataGridCheckBoxColumn x:Name="Checker" Header="IsFinished?" Binding="{Binding IsFinished, Mode=TwoWay}"/>                
+                <DataGridTemplateColumn Header="IsFinished?">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox Name="FinishedChecker" IsChecked="{Binding Path= IsFinished, UpdateSourceTrigger=PropertyChanged}" Click="FinishedChecker_Click" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>                
             </DataGrid.Columns>
         </DataGrid>
 
@@ -122,6 +128,7 @@
             <Button Content="Show All Entries" x:Name="RunDB" Background="White" Click="RunDB_Click"/>
             <Button Content="Delete Selected Record" x:Name="DeleteRecord" Background="#FFE4503F" Click="DeleteRecord_Click"/>
             <Button Content="Update" x:Name="Update" Background="#FFFFF966" Click="Update_Click"/>
+            <Button Content="Finished" x:Name="Finished" Background="LightSkyBlue" Click="Finished_Click"/>
         </StackPanel>
 
     </Grid>
