@@ -22,5 +22,6 @@ namespace DBAppCK
         public string Client_Name { get; set; }
         public string Name { get; set; }
         public Nullable<int> Quantity { get; set; }
+        public Nullable<bool> IsFinished { get; set; }
     }
 }

@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="MainDataBaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="MainDataBaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="MainTable">
           <Key>
             <PropertyRef Name="Id" />
@@ -17,12 +17,12 @@
           <Property Name="Client Name" Type="varchar" MaxLength="150" />
           <Property Name="Name" Type="varchar" MaxLength="150" />
           <Property Name="Quantity" Type="int" />
+          <Property Name="IsFinished" Type="bit" />
         </EntityType>
         <EntityContainer Name="MainDataBaseModelStoreContainer">
           <EntitySet Name="MainTable" EntityType="Self.MainTable" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="MainDataBaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -38,6 +38,7 @@
           <Property Name="Client_Name" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="Quantity" Type="Int32" />
+          <Property Name="IsFinished" Type="Boolean" />
         </EntityType>
         <EntityContainer Name="MainDataBaseEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="MainTables" EntityType="Self.MainTable" />
@@ -51,6 +52,7 @@
           <EntitySetMapping Name="MainTables">
             <EntityTypeMapping TypeName="MainDataBaseModel.MainTable">
               <MappingFragment StoreEntitySet="MainTable">
+                <ScalarProperty Name="IsFinished" ColumnName="IsFinished" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Planned_Week" ColumnName="Planned Week" />
                 <ScalarProperty Name="Actual_Week" ColumnName="Actual Week" />
