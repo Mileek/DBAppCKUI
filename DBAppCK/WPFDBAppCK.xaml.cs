@@ -31,7 +31,7 @@ namespace DBAppCK
     public partial class WPFDBAppCK : Window
     {
         public List<MainTable> newSourceFile = new List<MainTable>(); //Public variable that store list from external excel file
-        
+
         public WPFDBAppCK()
         {
             InitializeComponent();
@@ -47,7 +47,8 @@ namespace DBAppCK
 
                 if (newSourceFile.Count == 0)
                 {
-                    this.MainDatabaseXAML.ItemsSource = entities.MainTables.ToList(); //Item source of datagrid is main table, without any filtering                    
+                    var elements = from el in entities.MainTables orderby el.Actual_Week ascending select el;
+                    this.MainDatabaseXAML.ItemsSource = elements.ToList(); //Item source of datagrid is main table, without any filtering                    
                 }
                 else
                 {
@@ -97,7 +98,7 @@ namespace DBAppCK
                             Weight = Convert.ToDouble(TextElementWeight.Text),
                             Order = TextElementOrder.Text,
                             Client_Name = TextElementClientName.Text,
-                            Name = TextElementName.Text,                            
+                            Name = TextElementName.Text,
                             Quantity = Convert.ToInt32(TextElementQuantity.Text)
                         };
                         if (newSourceFile.Count == 0) //Dependency wheter open was clicked or not
@@ -274,101 +275,114 @@ namespace DBAppCK
 
             using (MainDataBaseEntities entities = new MainDataBaseEntities())
             {
-
                 var SelectedItem = (ComboBoxItem)searchList.SelectedValue;
-                var content = ((TextBlock)SelectedItem.Content).Text; //Debugging window shows exact variable
-
-                if (newSourceFile.Count == 0)
+                if (SelectedItem == null)
                 {
-                    if (content == "Planned Week")
-                    {
-                        var elements = from el in entities.MainTables.ToList() where (Convert.ToString(el.Planned_Week).Contains(SearchItems.Text)) select el;
-                        MainDatabaseXAML.ItemsSource = elements.ToList();
-                    }
-                    else if (content == "Actual Week")
-                    {
-                        var elements = from el in entities.MainTables.ToList() where (Convert.ToString(el.Actual_Week).Contains(SearchItems.Text)) select el;
-                        MainDatabaseXAML.ItemsSource = elements.ToList();
-                    }
-                    else if (content == "Weight")
-                    {
-                        var elements = from el in entities.MainTables.ToList() where (Convert.ToString(el.Weight).Contains(SearchItems.Text)) select el;
-                        MainDatabaseXAML.ItemsSource = elements.ToList();
-                    }
-                    else if (content == "Order")
-                    {
-                        var elements = from el in entities.MainTables where (el.Order.Contains(SearchItems.Text)) select el;
-                        MainDatabaseXAML.ItemsSource = elements.ToList();
-                    }
-                    else if (content == "Client Name")
-                    {
-                        var elements = from el in entities.MainTables where (el.Client_Name.Contains(SearchItems.Text)) select el;
-                        MainDatabaseXAML.ItemsSource = elements.ToList();
-                    }
-                    else if (content == "Name")
-                    {
-                        var elements = from el in entities.MainTables where (el.Name.Contains(SearchItems.Text)) select el;
-                        MainDatabaseXAML.ItemsSource = elements.ToList();
-                    }
-                    else if (content == "Quantity")
-                    {
-                        var elements = from el in entities.MainTables.ToList() where (Convert.ToString(el.Quantity).Contains(SearchItems.Text)) select el;
-                        MainDatabaseXAML.ItemsSource = elements.ToList();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Something gone wrong!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                    MessageBox.Show("Select item from box above !");
                 }
                 else
                 {
-                    if (content == "Planned Week")
+
+                    var content = ((TextBlock)SelectedItem.Content).Text; //Debugging window shows exact variable
+
+                    if (newSourceFile.Count == 0)
                     {
-                        var filter = newSourceFile.Where(newSourceFile => (Convert.ToString(newSourceFile.Planned_Week).Contains(SearchItems.Text)));
-                        MainDatabaseXAML.ItemsSource = filter.ToList();
-                        MainDatabaseXAML.Items.Refresh();
-                    }
-                    else if (content == "Actual Week")
-                    {
-                        var filter = newSourceFile.Where(newSourceFile => (Convert.ToString(newSourceFile.Actual_Week).Contains(SearchItems.Text)));
-                        MainDatabaseXAML.ItemsSource = filter.ToList();
-                        MainDatabaseXAML.Items.Refresh();
-                    }
-                    else if (content == "Weight")
-                    {
-                        var filter = newSourceFile.Where(newSourceFile => (Convert.ToString(newSourceFile.Weight).Contains(SearchItems.Text)));
-                        MainDatabaseXAML.ItemsSource = filter.ToList();
-                        MainDatabaseXAML.Items.Refresh();
-                    }
-                    else if (content == "Order")
-                    {
-                        var filter = newSourceFile.Where(newSourceFile => (newSourceFile.Order).Contains(SearchItems.Text));
-                        MainDatabaseXAML.ItemsSource = filter.ToList();
-                        MainDatabaseXAML.Items.Refresh();
-                    }
-                    else if (content == "Client Name")
-                    {
-                        var filter = newSourceFile.Where(newSourceFile => (newSourceFile.Client_Name).Contains(SearchItems.Text));
-                        MainDatabaseXAML.ItemsSource = filter.ToList();
-                        MainDatabaseXAML.Items.Refresh();
-                    }
-                    else if (content == "Name")
-                    {
-                        var filter = newSourceFile.Where(newSourceFile => (newSourceFile.Name).Contains(SearchItems.Text));
-                        MainDatabaseXAML.ItemsSource = filter.ToList();
-                        MainDatabaseXAML.Items.Refresh();
-                    }
-                    else if (content == "Quantity")
-                    {
-                        var filter = newSourceFile.Where(newSourceFile => (Convert.ToString(newSourceFile.Quantity).Contains(SearchItems.Text)));
-                        MainDatabaseXAML.ItemsSource = filter.ToList();
-                        MainDatabaseXAML.Items.Refresh();
+                        if (content == "Planned Week")
+                        {
+                            var elements = from el in entities.MainTables.ToList() where (Convert.ToString(el.Planned_Week).Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
+                            MainDatabaseXAML.ItemsSource = elements.ToList();
+                        }
+                        else if (content == "Actual Week")
+                        {
+                            var elements = from el in entities.MainTables.ToList() where (Convert.ToString(el.Actual_Week).Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
+                            MainDatabaseXAML.ItemsSource = elements.ToList();
+                        }
+                        else if (content == "Weight")
+                        {
+                            var elements = from el in entities.MainTables.ToList() where (Convert.ToString(el.Weight).Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
+                            MainDatabaseXAML.ItemsSource = elements.ToList();
+                        }
+                        else if (content == "Order")
+                        {
+                            var elements = from el in entities.MainTables where (el.Order.Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
+                            MainDatabaseXAML.ItemsSource = elements.ToList();
+                        }
+                        else if (content == "Client Name")
+                        {
+                            var elements = from el in entities.MainTables where (el.Client_Name.Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
+                            MainDatabaseXAML.ItemsSource = elements.ToList();
+                        }
+                        else if (content == "Name")
+                        {
+                            var elements = from el in entities.MainTables where (el.Name.Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
+                            MainDatabaseXAML.ItemsSource = elements.ToList();
+                        }
+                        else if (content == "Quantity")
+                        {
+                            var elements = from el in entities.MainTables.ToList() where (Convert.ToString(el.Quantity).Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
+                            MainDatabaseXAML.ItemsSource = elements.ToList();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Something gone wrong!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                     }
                     else
                     {
-                        MessageBox.Show("Something gone wrong!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        if (content == "Planned Week")
+                        {
+                            var filter = newSourceFile.Where(newSourceFile => (Convert.ToString(newSourceFile.Planned_Week).Contains(SearchItems.Text)));
+                            MainDatabaseXAML.ItemsSource = filter.ToList();
+                            MainDatabaseXAML.Items.Refresh();
+                        }
+                        else if (content == "Actual Week")
+                        {
+                            var filter = newSourceFile.Where(newSourceFile => (Convert.ToString(newSourceFile.Actual_Week).Contains(SearchItems.Text)));
+                            MainDatabaseXAML.ItemsSource = filter.ToList();
+                            MainDatabaseXAML.Items.Refresh();
+                        }
+                        else if (content == "Weight")
+                        {
+                            var filter = newSourceFile.Where(newSourceFile => (Convert.ToString(newSourceFile.Weight).Contains(SearchItems.Text)));
+                            MainDatabaseXAML.ItemsSource = filter.ToList();
+                            MainDatabaseXAML.Items.Refresh();
+                        }
+                        else if (content == "Order")
+                        {
+                            var filter = newSourceFile.Where(newSourceFile => (newSourceFile.Order).Contains(SearchItems.Text));
+                            MainDatabaseXAML.ItemsSource = filter.ToList();
+                            MainDatabaseXAML.Items.Refresh();
+                        }
+                        else if (content == "Client Name")
+                        {
+                            var filter = newSourceFile.Where(newSourceFile => (newSourceFile.Client_Name).Contains(SearchItems.Text));
+                            MainDatabaseXAML.ItemsSource = filter.ToList();
+                            MainDatabaseXAML.Items.Refresh();
+                        }
+                        else if (content == "Name")
+                        {
+                            var filter = newSourceFile.Where(newSourceFile => (newSourceFile.Name).Contains(SearchItems.Text));
+                            MainDatabaseXAML.ItemsSource = filter.ToList();
+                            MainDatabaseXAML.Items.Refresh();
+                        }
+                        else if (content == "Quantity")
+                        {
+                            var filter = newSourceFile.Where(newSourceFile => (Convert.ToString(newSourceFile.Quantity).Contains(SearchItems.Text)));
+                            MainDatabaseXAML.ItemsSource = filter.ToList();
+                            MainDatabaseXAML.Items.Refresh();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Something gone wrong!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                     }
                 }
+
+
+
+                
+
+
 
             }
         }
@@ -521,10 +535,10 @@ namespace DBAppCK
             }
         }
 
-       
-        private void Finished_Click(object sender, RoutedEventArgs e)
+
+        private void Test_Click(object sender, RoutedEventArgs e)
         {
-            
+
         }
 
         private void FinishedChecker_Click(object sender, RoutedEventArgs e)
@@ -532,7 +546,7 @@ namespace DBAppCK
 
             using (MainDataBaseEntities entities = new MainDataBaseEntities())
             {
-                
+
                 MainTable mainTableCheck = (MainTable)MainDatabaseXAML.SelectedItem;
 
                 mainTableCheck.IsFinished = mainTableCheck.IsFinished.Value;
@@ -557,6 +571,24 @@ namespace DBAppCK
             }
 
 
+        }
+
+        private void Clear_Click(object sender, RoutedEventArgs e)
+        {
+            TextElementPlannedWeek.Text = string.Empty;
+            TextElementActualWeek.Text = string.Empty;
+            TextElementWeight.Text = string.Empty;
+            TextElementOrder.Text = string.Empty;
+            TextElementClientName.Text = string.Empty;
+            TextElementName.Text = string.Empty;
+            TextElementQuantity.Text = string.Empty;
+        }
+
+        private void DragnMove(object sender, MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+
+            this.DragMove();
         }
     }
 }

@@ -7,129 +7,207 @@
         TextOptions.TextRenderingMode="Auto" 
         xmlns:local="clr-namespace:DBAppCK"
         mc:Ignorable="d"
-        Title="WPFDBAppCK" Height="650" Width="1000" Background="#FF75C3FF" FontFamily="Arial" >
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <DockPanel Grid.ColumnSpan="8">
-            <Menu DockPanel.Dock="Top">
-                <MenuItem Header="_File">
-                    <MenuItem Header="_Open" Click="Open_Click" />
-                    <MenuItem Header="_Save" Click="Save_Click"/>
-                    <MenuItem Header="_Save As" Click="SaveAs_Click" />
-                    <Separator/>
-                    <MenuItem Header="Exit" Click="Exit_Click" />
-                </MenuItem>
-                <MenuItem Header="_Edit">
-                    <MenuItem Header="_Cut"/>
-                    <MenuItem Header="_Copy"/>
-                    <MenuItem Header="_Paste"/>
-                </MenuItem>
-                <MenuItem Header="_Tools">
-                    <MenuItem Header="_Log Out"/>
-                    <MenuItem Header="_Copy"/>
-                    <MenuItem Header="_Is Finished?" IsCheckable="True" IsChecked="False"/>
-                </MenuItem>
-            </Menu>
-        </DockPanel>
-        <StackPanel Grid.Column="0" Grid.Row="1" MinWidth="125"  >
-            <Label Margin="10" HorizontalAlignment="Center">Search by:</Label>
-            <ComboBox Margin="5" x:Name="searchList" SelectionChanged="searchList_SelectionChanged">
-                <ComboBoxItem x:Name="itemInComboBox">
-                    <TextBlock x:Name="PlannedWeekChoosen" FontWeight="SemiBold" Foreground="BlueViolet">Planned Week</TextBlock>
-                </ComboBoxItem>
-                <ComboBoxItem>
-                    <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Actual Week</TextBlock>
-                </ComboBoxItem>
-                <ComboBoxItem>
-                    <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Weight</TextBlock>
-                </ComboBoxItem>
-                <ComboBoxItem>
-                    <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Order</TextBlock>
-                </ComboBoxItem>
-                <ComboBoxItem>
-                    <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Client Name</TextBlock>
-                </ComboBoxItem>
-                <ComboBoxItem>
-                    <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Name</TextBlock>
-                </ComboBoxItem>
-                <ComboBoxItem>
-                    <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Quantity</TextBlock>
-                </ComboBoxItem>
-            </ComboBox>
-            <TextBox Margin="5" x:Name="SearchItems" MinWidth="100" Background="LightBlue" />
-            <Button Content="Search" Margin="5" Background="DarkCyan" Click="Search_Click"/>
-            <TextBlock Margin="10" HorizontalAlignment="Center">Menu 1</TextBlock>
-            <TextBlock Margin="10" HorizontalAlignment="Center">Menu 2</TextBlock>
-            <TextBlock Margin="10" HorizontalAlignment="Center">Menu 3</TextBlock>
-        </StackPanel>
-        <DataGrid x:Name="MainDatabaseXAML" Grid.Column="1" Grid.Row="1"  
+        Title="WPFDBAppCK" Height="680" Width="1240" FontFamily="Arial" 
+        WindowStyle="None"
+        Background="Transparent"
+        AllowsTransparency="True"
+        >
+
+    <Border Background="#FF231A2B" BorderThickness="1" BorderBrush="#F51D4C" CornerRadius="25" MouseLeftButtonDown="DragnMove"  >
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Content="User:"/>
+
+            <StackPanel Grid.Column="0" Grid.RowSpan="4" Grid.Row="4">
+                <RadioButton Content="Log Out" Height="60" Margin="10"
+                             FontSize="24" Foreground="White"
+                             Style="{StaticResource Highlight_BTN}"/>
+            </StackPanel>
+
+            <Border Grid.Column="1" Margin="10,15,10,15">
+                <DockPanel>
+                    <Menu DockPanel.Dock="Top"  Background="Transparent" Foreground="White">
+                        <MenuItem Header="_File" Background="#FF231A2B">
+                            <MenuItem Header="_Open" Click="Open_Click" Background="#FF231A2B"/>
+                            <MenuItem Header="_Save" Click="Save_Click" Background="#FF231A2B"/>
+                            <MenuItem Header="_Save As" Click="SaveAs_Click" Background="#FF231A2B"/>
+                            <Separator/>
+                            <MenuItem Header="Exit" Click="Exit_Click" Background="#FF231A2B"/>
+                        </MenuItem>
+                        <MenuItem Header="_Edit">
+                            <MenuItem Header="_Cut"/>
+                            <MenuItem Header="_Copy"/>
+                            <MenuItem Header="_Paste"/>
+                        </MenuItem>
+                        <MenuItem Header="_Tools">
+                            <MenuItem Header="_Log Out"/>
+                            <MenuItem Header="_Copy"/>
+                            <MenuItem Header="_Is Finished?" IsCheckable="True" IsChecked="False"/>
+                        </MenuItem>
+                    </Menu>
+                </DockPanel>
+            </Border>
+            <Border Grid.Column="0" Margin="10,0,10,0" CornerRadius="4" Background="#FF342244" Grid.Row="1" MinWidth="125" BorderBrush="#F51D4C" BorderThickness="1">
+                <StackPanel >
+                    <Label Margin="10" HorizontalAlignment="Center" Foreground="White" >Search by:</Label>
+                    <ComboBox Margin="5" x:Name="searchList" SelectionChanged="searchList_SelectionChanged" >
+                        <ComboBoxItem x:Name="itemInComboBox">
+                            <TextBlock x:Name="PlannedWeekChoosen" FontWeight="SemiBold" Foreground="BlueViolet">Planned Week</TextBlock>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Actual Week</TextBlock>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Weight</TextBlock>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Order</TextBlock>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Client Name</TextBlock>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Name</TextBlock>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Quantity</TextBlock>
+                        </ComboBoxItem>
+                    </ComboBox>
+                    <TextBox Margin="5" x:Name="SearchItems" MinWidth="100" 
+                             Style="{StaticResource TextBoxValues}"/>
+                    <RadioButton Content="Search" Height="25" Margin="0,5,0,5"
+                             FontSize="16" Foreground="White"
+                             Style="{StaticResource Search_BTN}"
+                             Click="Search_Click"/>
+                    <RadioButton Height="35"  Margin="0,5,0,5"
+                             FontSize="16" Foreground="White" Content="Menu 1"
+                             Style="{StaticResource Highlight_BTN}"/>
+                    <RadioButton Height="35" Margin="0,5,0,5"
+                             FontSize="16" Foreground="White" Content="Menu 2"
+                             Style="{StaticResource Highlight_BTN}"/>
+                    <RadioButton Height="35" Margin="0,5,0,5"
+                             FontSize="16" Foreground="White" Content="Menu 3"
+                             Style="{StaticResource Highlight_BTN}"/>
+                </StackPanel>
+            </Border>
+            <DataGrid x:Name="MainDatabaseXAML" Grid.Column="1" Grid.Row="1"  
                   Margin="10" HorizontalAlignment="Stretch" 
                   SelectionChanged="MainDatabaseXAML_SelectionChanged" CanUserDeleteRows="False" 
-                  CanUserAddRows="False" VerticalAlignment="Center" MinWidth="500" MinHeight="500" 
-                  Background="#FFB2FFEC" AutoGenerateColumns="False" >
+                  CanUserAddRows="False" VerticalAlignment="Center" MinWidth="900" MinHeight="500" 
+                  Background="#FF342244" AutoGenerateColumns="False" >
 
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Unique Id" Binding="{Binding Id}"/>
-                <DataGridTextColumn Header="Planned Week" Binding="{Binding Planned_Week}"/>
-                <DataGridTextColumn Header="Actual Week" Binding="{Binding Actual_Week}"/>
-                <DataGridTextColumn Header="Weight" Binding="{Binding Weight}"/>
-                <DataGridTextColumn Header="Order" MinWidth="100" Binding="{Binding Order}"/>
-                <DataGridTextColumn Header="Client Name" MinWidth="100" Binding="{Binding Client_Name}"/>
-                <DataGridTextColumn Header="Name" MinWidth="100" Binding="{Binding Name}"/>
-                <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}"/>
-                <DataGridTemplateColumn Header="IsFinished?">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <CheckBox Name="FinishedChecker" IsChecked="{Binding Path= IsFinished, UpdateSourceTrigger=PropertyChanged}" Click="FinishedChecker_Click" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>                
-            </DataGrid.Columns>
-        </DataGrid>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Unique Id" Binding="{Binding Id}"/>
+                    <DataGridTextColumn Header="Planned Week" Binding="{Binding Planned_Week}"/>
+                    <DataGridTextColumn Header="Actual Week" Binding="{Binding Actual_Week}"/>
+                    <DataGridTextColumn Header="Weight" Binding="{Binding Weight}"/>
+                    <DataGridTextColumn Header="Order" MinWidth="100" Binding="{Binding Order}"/>
+                    <DataGridTextColumn Header="Client Name" MinWidth="100" Binding="{Binding Client_Name}"/>
+                    <DataGridTextColumn Header="Name" MinWidth="100" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}"/>
+                    <DataGridTemplateColumn Header="IsFinished?">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox Name="FinishedChecker" IsThreeState="False" IsChecked="{Binding Path= IsFinished, UpdateSourceTrigger=PropertyChanged}" Click="FinishedChecker_Click" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
 
-        <GridSplitter Grid.Column="0" Grid.Row="1" Grid.RowSpan="7" Background="DarkBlue" HorizontalAlignment="Right" Width="2"/>
+            <GridSplitter Grid.Column="0" Grid.Row="1" Grid.RowSpan="7" Background="#F51D4C" HorizontalAlignment="Right" Width="2"/>
+
+            <StackPanel Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="4" Orientation="Horizontal">
+                <Label Content="Enter Planned Week" Margin="3,0,3,3" HorizontalContentAlignment="Center" Width="125" BorderThickness="1" BorderBrush="#F51D4C" Foreground="White" FontStretch="Normal"/>
+                <Label Content="Enter Actual Week" Margin="3,0,3,3"  Width="125" HorizontalContentAlignment="Center" BorderThickness="1" BorderBrush="#F51D4C" Foreground="White"/>
+                <Label Content="Enter Weight" Width="125" Margin="3,0,3,3" HorizontalContentAlignment="Center" BorderThickness="1" BorderBrush="#F51D4C" Foreground="White"/>
+                <Label Content="Enter Order" Width="125" Margin="3,0,3,3" HorizontalContentAlignment="Center" BorderThickness="1" BorderBrush="#F51D4C" Foreground="White"/>
+                <Label Content="Enter Client Name" Margin="3,0,3,3" Width="125" HorizontalContentAlignment="Center" BorderThickness="1" BorderBrush="#F51D4C" Foreground="White"/>
+                <Label Content="Enter Name" Width="125" Margin="3,0,3,3" HorizontalContentAlignment="Center" BorderThickness="1" BorderBrush="#F51D4C" Foreground="White"/>
+                <Label Content="Enter Quantity" Width="125" Margin="3,0,3,3" HorizontalContentAlignment="Center" BorderThickness="1" BorderBrush="#F51D4C" Foreground="White"/>
+
+            </StackPanel>
+
+            <StackPanel Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="4" VerticalAlignment="Stretch" Orientation="Horizontal">
+                <TextBox  TextWrapping="Wrap" x:Name="TextElementPlannedWeek" MinWidth="100" 
+                      Width="125" HorizontalAlignment="Left" Margin="3,0,3,3"
+                      BorderThickness="1" BorderBrush="#F51D4C" Foreground="White"
+                      Style="{StaticResource TextBoxValues}"/>
+                <TextBox  TextWrapping="Wrap" x:Name="TextElementActualWeek" MinWidth="100" 
+                      Width="125" HorizontalAlignment="Left" Margin="3,0,3,3"
+                      BorderThickness="1" BorderBrush="#F51D4C" Foreground="White"
+                      Style="{StaticResource TextBoxValues}"/>
+                <TextBox  x:Name="TextElementWeight" MinWidth="100"  
+                      Width="125" HorizontalAlignment="Left" Margin="3,0,3,3"
+                      BorderThickness="1" BorderBrush="#F51D4C" Foreground="White"
+                      Style="{StaticResource TextBoxValues}"/>
+                <TextBox  x:Name="TextElementOrder" MinWidth="100"  
+                      Width="125" HorizontalAlignment="Left" Margin="3,0,3,3"
+                      BorderThickness="1" BorderBrush="#F51D4C" Foreground="White"
+                      Style="{StaticResource TextBoxValues}"/>
+                <TextBox  x:Name="TextElementClientName" MinWidth="100" 
+                      Width="125" HorizontalAlignment="Left" Margin="3,0,3,3"
+                      BorderThickness="1" BorderBrush="#F51D4C" Foreground="White"
+                      Style="{StaticResource TextBoxValues}"/>
+                <TextBox  x:Name="TextElementName" MinWidth="100"  
+                      Width="125" HorizontalAlignment="Left" Margin="3,0,3,3"
+                      BorderThickness="1" BorderBrush="#F51D4C" Foreground="White"
+                      Style="{StaticResource TextBoxValues}"/>
+                <TextBox  x:Name="TextElementQuantity" MinWidth="100" 
+                      Width="125" HorizontalAlignment="Left" Margin="3,0,3,3"
+                      BorderThickness="1" BorderBrush="#F51D4C" Foreground="White"
+                      Style="{StaticResource TextBoxValues}"/>
 
 
-        <Label Content="Enter Planned Week" Grid.Row="4" Grid.Column="1"  HorizontalAlignment="Left" Width="125" Background="#FF428AFF" FontStretch="Normal"/>
-        <Label Content="Enter Actual Week" Grid.Row="4" Grid.Column="1" Margin="125,0,0,0" Width="125" HorizontalAlignment="Left" Background="#FF428AFF"/>
-        <Label Content="Enter Weight" Grid.Row="4" Grid.Column="1" Margin="250,0,0,0" Width="125" HorizontalAlignment="Left" Background="#FF428AFF"/>
-        <Label Content="Enter Order" Grid.Row="4" Grid.Column="1" Margin="375,0,0,0" Width="125" HorizontalAlignment="Left" Background="#FF428AFF"/>
-        <Label Content="Enter Client Name" Grid.Row="4" Grid.Column="1" Margin="500,0,0,0" Width="125" HorizontalAlignment="Left" Background="#FF428AFF"/>
-        <Label Content="Enter Name" Grid.Row="4" Grid.Column="1" Margin="625,0,0,0" Width="125" HorizontalAlignment="Left" Background="#FF428AFF"/>
-        <Label Content="Enter Quantity" Grid.Row="4" Grid.Column="1" Margin="750,0,0,0" Width="125" HorizontalAlignment="Left" Background="#FF428AFF"/>
+            </StackPanel>
 
 
-        <TextBox  x:Name="TextElementPlannedWeek" MinWidth="100" Grid.Row="5" Grid.Column="1"  HorizontalAlignment="Left" Width="125" Background="LightBlue"/>
-        <TextBox  TextWrapping="Wrap" x:Name="TextElementActualWeek" MinWidth="100" Grid.Row="5" Grid.Column="1" Margin="125,0,0,0" Width="125" HorizontalAlignment="Left" Background="LightBlue"/>
-        <TextBox  x:Name="TextElementWeight" MinWidth="100" Grid.Row="5" Grid.Column="1" Margin="250,0,0,0" Width="125" HorizontalAlignment="Left" Background="LightBlue"/>
-        <TextBox  x:Name="TextElementOrder" MinWidth="100" Grid.Row="5" Grid.Column="1" Margin="375,0,0,0" Width="125" HorizontalAlignment="Left" Background="LightBlue"/>
-        <TextBox  x:Name="TextElementClientName" MinWidth="100" Grid.Row="5" Grid.Column="1" Margin="500,0,0,0" Width="125" HorizontalAlignment="Left" Background="LightBlue"/>
-        <TextBox  x:Name="TextElementName" MinWidth="100" Grid.Row="5" Grid.Column="1" Margin="625,0,0,0" Width="125" HorizontalAlignment="Left" Background="LightBlue"/>
-        <TextBox  x:Name="TextElementQuantity" MinWidth="100" Grid.Row="5" Grid.Column="1" Margin="750,0,0,0" Width="125" HorizontalAlignment="Left" Background="LightBlue"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Center">
+                <RadioButton Content="Add New Element" x:Name="AddElementToGrid" 
+                             Margin="10,5,10,5" Height="25" Width="120"
+                             Foreground="White"
+                             Style="{StaticResource Functional_BTN}"
+                             Click="AddNewElementToGrid_Click"/>
+                <RadioButton Content="Show All Entries" x:Name="RunDB" 
+                             Margin="10,5,10,5" Height="25" Width="100"
+                             Foreground="White" 
+                             Style="{StaticResource Functional_BTN}"
+                             Click="RunDB_Click"/>
+                <RadioButton Content="Delete Selected Record" x:Name="DeleteRecord"
+                             Margin="10,5,10,5" Height="25" Width="150"
+                             Foreground="White"
+                             Style="{StaticResource Functional_BTN}"
+                        Click="DeleteRecord_Click"/>
+                <RadioButton Content="Update" x:Name="Update"
+                             Margin="10,5,10,5" Height="25" Width="60"
+                             Foreground="White"
+                             Style="{StaticResource Functional_BTN}"
+                             Click="Update_Click"/>
+                <RadioButton Content="Clear" x:Name="Clear"
+                             Margin="10,5,10,5" Height="25" Width="50"
+                             Foreground="White"
+                             Style="{StaticResource Functional_BTN}"
+                             Click="Clear_Click"/>
+                <Button Content="Test Function" x:Name="Test" Background="LightSkyBlue" Click="Test_Click"/>
+            </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Center">
-            <Button Content="Add New Element" x:Name="AddElementToGrid" Background="#FF25E854" Click="AddNewElementToGrid_Click"/>
-            <Button Content="Show All Entries" x:Name="RunDB" Background="White" Click="RunDB_Click"/>
-            <Button Content="Delete Selected Record" x:Name="DeleteRecord" Background="#FFE4503F" Click="DeleteRecord_Click"/>
-            <Button Content="Update" x:Name="Update" Background="#FFFFF966" Click="Update_Click"/>
-            <Button Content="Finished" x:Name="Finished" Background="LightSkyBlue" Click="Finished_Click"/>
-        </StackPanel>
-
-    </Grid>
+        </Grid>
+    </Border>
 </Window>

@@ -4,6 +4,13 @@
              xmlns:local="clr-namespace:DBAppCK"
              StartupUri="WPFDBAppCK.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/MenuButtonTheme.xaml"/>
+                <ResourceDictionary Source="Resources/FunctionalButtonTheme.xaml"/>
+                <ResourceDictionary Source="Resources/SearchButtonTheme.xaml"/>
+                <ResourceDictionary Source="Resources/TextBoxTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
