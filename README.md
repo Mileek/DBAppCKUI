@@ -12,3 +12,6 @@ As you could probably see the app is currently in development and I am planning 
 
 
 There are currently many bugs, many unexpected events that are not handled propertly, business logic and application logic are still messed up together - everything will be periodically repaired.
+
+This is how the app looks like now:
+![image](https://user-images.githubusercontent.com/95537833/151190314-a705b6bb-126e-4302-918e-1319464235a0.png)
