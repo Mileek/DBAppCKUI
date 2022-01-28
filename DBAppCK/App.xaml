@@ -9,7 +9,7 @@
                 <ResourceDictionary Source="Resources/MenuButtonTheme.xaml"/>
                 <ResourceDictionary Source="Resources/FunctionalButtonTheme.xaml"/>
                 <ResourceDictionary Source="Resources/SearchButtonTheme.xaml"/>
-                <ResourceDictionary Source="Resources/TextBoxTheme.xaml"/>
+                <ResourceDictionary Source="Resources/TextBoxTheme.xaml"/>                               
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

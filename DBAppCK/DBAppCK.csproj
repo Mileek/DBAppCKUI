@@ -134,6 +134,7 @@
     <Compile Include="MainTable.cs">
       <DependentUpon>MainDataBaseModels.tt</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\VisibilityCalendarViewModel.cs" />
     <Compile Include="WPFDBAppCK.xaml.cs">
       <DependentUpon>WPFDBAppCK.xaml</DependentUpon>
     </Compile>

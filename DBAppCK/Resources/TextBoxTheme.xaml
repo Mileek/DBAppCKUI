@@ -3,49 +3,56 @@
 
     <Style TargetType="{x:Type TextBox}"
            x:Key="TextBoxValues">
+
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
-
-                        <Grid VerticalAlignment="Stretch"
-                              HorizontalAlignment="Stretch"
-                              >
-
-                            <TextBox Text="{TemplateBinding Property=Text}" Background="{TemplateBinding Background}" Foreground="White" x:Name="MainBox"/>
-
-
-                            <TextBlock IsHitTestVisible="False"
-                                       Text="Type Here..."
-                                       FontSize="10"
-                                       Margin="5,0,0,0"
-                                       VerticalAlignment="Center"
-                                       HorizontalAlignment="Left"
-                                       Foreground="LightGray"
-                                       >
-
-                                <TextBlock.Style>
-                                    <Style TargetType="{x:Type TextBlock}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Text, ElementName=MainBox}" Value="">
-                                                <Setter Property="Visibility" Value="Visible"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                        <Setter Property="Visibility" Value="Hidden"/>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                        </Grid>
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}"                                 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                Background="{TemplateBinding Background}" 
+                                SnapsToDevicePixels="True">
+                            <Grid>
+                                <Rectangle StrokeThickness="1"/>
+                                <TextBlock x:Name="textDisplayed" 
+                                           Text="Type Here..." 
+                                           Visibility="Collapsed" 
+                                           FontSize="10"
+                                           Margin="5,0,0,0"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left"
+                                           Foreground="#FF9C9999"/>
+                                <ScrollViewer x:Name="PART_ContentHost"                                              
+                                          Focusable="false"
+                                          HorizontalScrollBarVisibility="Hidden"
+                                          VerticalScrollBarVisibility="Hidden"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Text" Value="">
+                                <Setter TargetName="textDisplayed" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-
+            <Setter Property="BorderBrush">
+                <Setter.Value>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#F51D4C"/>
+                        <GradientStop Color="DarkRed" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
             <Setter Property="Background" Value="#FF446A8C"/>
 
         </Style.Setters>
 
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="SteelBlue"/>
+            </Trigger>
+            <Trigger Property="IsKeyboardFocusWithin" Value="True">
                 <Setter Property="Background" Value="SteelBlue"/>
             </Trigger>
         </Style.Triggers>

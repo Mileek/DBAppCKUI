@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using ClosedXML.Excel;
+using DBAppCK.ViewModel;
 using Microsoft.Win32;
 
 namespace DBAppCK
@@ -30,25 +32,87 @@ namespace DBAppCK
 
     public partial class WPFDBAppCK : Window
     {
-        public List<MainTable> newSourceFile = new List<MainTable>(); //Public variable that store list from external excel file
+        public List<MainTable> loadedExcelFile = new List<MainTable>(); //Public variable that store list from external excel file
+        private void showFinishedItemsOrAll()
+        {
+            MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities();
+            if (loadedExcelFile.Count == 0)
+            {
+                if (FinishedOnly.IsChecked == true)
+                {
+                    var elementsInMainDB = from el in mainScreenEntity.MainTables
+                                           where el.IsFinished.Value == true
+                                           orderby el.Actual_Week ascending
+                                           select el;
+                    MainDatabaseXAML.ItemsSource = elementsInMainDB.ToList();
+                }
+                else
+                {
+                    var elementsInMainDB = from el in mainScreenEntity.MainTables
+                                           orderby el.Actual_Week ascending
+                                           select el;
+                    MainDatabaseXAML.ItemsSource = elementsInMainDB.ToList();
+                }
+
+            }
+            else
+            {
+                if (MessageBox.Show("Are you sure you want to switch to main database?, " +
+                                   "all progress will be deleted !", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                {
+                    //After pressing No do nothing
+                }
+                else
+                {
+                    loadedExcelFile.Clear(); //Clearing whole variable(List)
+
+                    if (FinishedOnly.IsChecked == true)
+                    {
+                        var elementsInMainDB = from el in mainScreenEntity.MainTables
+                                               where el.IsFinished.Value == true
+                                               orderby el.Actual_Week ascending
+                                               select el;
+                        MainDatabaseXAML.ItemsSource = elementsInMainDB.ToList();
+                    }
+                    else
+                    {
+                        var elementsInMainDB = from el in mainScreenEntity.MainTables
+                                               orderby el.Actual_Week ascending
+                                               select el;
+                        MainDatabaseXAML.ItemsSource = elementsInMainDB.ToList();
+                    }
+                }
+            }
+
+        }
+        private bool calendarVisibilityFlag = false;
+
+        private static int GetWeekNumber(DateTime time)
+        {
+            GregorianCalendar cal = new GregorianCalendar();
+            int week = cal.GetWeekOfYear(time, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+            return week;
+        }        
+
 
         public WPFDBAppCK()
         {
             InitializeComponent();
+
+            VisibilityCalendarViewModel calendarView = new VisibilityCalendarViewModel();
+            this.DataContext = calendarView;
 
         }
 
 
         private void RunDB_Click(object sender, RoutedEventArgs e)
         {
-            using (MainDataBaseEntities entities = new MainDataBaseEntities())
+            using (MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities())
             {
-                //var elements = from el in entities.MainTables select el;
-
-                if (newSourceFile.Count == 0)
+                
+                if (loadedExcelFile.Count == 0)
                 {
-                    var elements = from el in entities.MainTables orderby el.Actual_Week ascending select el;
-                    this.MainDatabaseXAML.ItemsSource = elements.ToList(); //Item source of datagrid is main table, without any filtering                    
+                    showFinishedItemsOrAll();               
                 }
                 else
                 {
@@ -59,9 +123,9 @@ namespace DBAppCK
                     }
                     else
                     {
-                        newSourceFile.Clear(); //Clearing whole variable(List)
+                        loadedExcelFile.Clear(); //Clearing whole variable(List)
 
-                        this.MainDatabaseXAML.ItemsSource = entities.MainTables.ToList();
+                        showFinishedItemsOrAll();
                     }
                 }
 
@@ -74,7 +138,7 @@ namespace DBAppCK
         }
         private void AddNewElementToGrid_Click(object sender, RoutedEventArgs e)
         {
-            using (MainDataBaseEntities entities = new MainDataBaseEntities())
+            using (MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities())
             {
                 if (Convert.ToInt32(TextElementPlannedWeek.Text) <= 0
                 || Convert.ToInt32(TextElementActualWeek.Text) <= 0
@@ -99,17 +163,18 @@ namespace DBAppCK
                             Order = TextElementOrder.Text,
                             Client_Name = TextElementClientName.Text,
                             Name = TextElementName.Text,
-                            Quantity = Convert.ToInt32(TextElementQuantity.Text)
+                            Quantity = Convert.ToInt32(TextElementQuantity.Text),
+                            IsFinished = false
                         };
-                        if (newSourceFile.Count == 0) //Dependency wheter open was clicked or not
+                        if (loadedExcelFile.Count == 0) //Dependency wheter open was clicked or not
                         {
 
-                            entities.MainTables.Add(mainTableAdd);
-                            entities.SaveChanges();
+                            mainScreenEntity.MainTables.Add(mainTableAdd);
+                            mainScreenEntity.SaveChanges();
                         }
                         else
                         {
-                            newSourceFile.Add(mainTableAdd);
+                            loadedExcelFile.Add(mainTableAdd);
                         }
                     }
                     catch (Exception)
@@ -122,16 +187,16 @@ namespace DBAppCK
                     }
                 }
                 //Displaying
-                if (newSourceFile.Count == 0)
+                if (loadedExcelFile.Count == 0)
                 {
                     //Work on base database in entity
-                    var elements = from el in entities.MainTables orderby el.Actual_Week ascending select el; //fcn to show all elements in datagrid
-                    MainDatabaseXAML.ItemsSource = elements.ToList(); // displaying everything as list
+                    
+                    showFinishedItemsOrAll();
                 }
                 else
                 {
                     //Add entry to excel file that was opened
-                    MainDatabaseXAML.ItemsSource = newSourceFile;
+                    MainDatabaseXAML.ItemsSource = loadedExcelFile;
                     MainDatabaseXAML.Items.Refresh();
                 }
             }
@@ -140,27 +205,26 @@ namespace DBAppCK
 
         private void DeleteRecord_Click(object sender, RoutedEventArgs e)
         {
-            using (MainDataBaseEntities entities = new MainDataBaseEntities())
+            using (MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities())
             {
 
-                if (newSourceFile.Count == 0)
+                if (loadedExcelFile.Count == 0)
                 {
                     //Working on MainDataBase - Entity
 
                     MainTable mainTableDel = (MainTable)MainDatabaseXAML.SelectedItem;
-                    entities.MainTables.Attach(mainTableDel);
-                    entities.MainTables.Remove(mainTableDel);
-                    entities.SaveChanges();
+                    mainScreenEntity.MainTables.Attach(mainTableDel);
+                    mainScreenEntity.MainTables.Remove(mainTableDel);
+                    mainScreenEntity.SaveChanges();
 
-                    //Displaying
-                    var elements = from el in entities.MainTables orderby el.Actual_Week ascending select el; //fcn to show all elements in datagrid
-                    MainDatabaseXAML.ItemsSource = elements.ToList(); // displaying everything as list 
+                    //Displaying                    
+                    showFinishedItemsOrAll();
                 }
                 else
                 {
                     //Working on loaded file
-                    newSourceFile.RemoveAt(MainDatabaseXAML.SelectedIndex);
-                    MainDatabaseXAML.ItemsSource = newSourceFile;
+                    loadedExcelFile.RemoveAt(MainDatabaseXAML.SelectedIndex);
+                    MainDatabaseXAML.ItemsSource = loadedExcelFile;
                     MainDatabaseXAML.Items.Refresh();
                 }
 
@@ -169,16 +233,16 @@ namespace DBAppCK
         }
         private void Update_Click(object sender, RoutedEventArgs e)
         {
-            using (MainDataBaseEntities entities = new MainDataBaseEntities())
+            using (MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities())
             {
                 try
                 {
                     MainTable mainTableUpdate = (MainTable)MainDatabaseXAML.SelectedItem;
 
-                    if (newSourceFile.Count == 0)
+                    if (loadedExcelFile.Count == 0)
                     {
 
-                        entities.MainTables.Attach(mainTableUpdate);
+                        mainScreenEntity.MainTables.Attach(mainTableUpdate);
 
                         mainTableUpdate.Planned_Week = Convert.ToInt32(TextElementPlannedWeek.Text);
                         mainTableUpdate.Actual_Week = Convert.ToInt32(TextElementActualWeek.Text);
@@ -189,7 +253,7 @@ namespace DBAppCK
                         mainTableUpdate.Quantity = Convert.ToInt32(TextElementQuantity.Text);
 
 
-                        entities.SaveChanges();
+                        mainScreenEntity.SaveChanges();
 
                         TextElementPlannedWeek.Text = string.Empty;
                         TextElementActualWeek.Text = string.Empty;
@@ -200,10 +264,9 @@ namespace DBAppCK
                         TextElementQuantity.Text = string.Empty;
 
                         //Displaying
-                        var elements = from el in entities.MainTables orderby el.Actual_Week ascending select el; //fcn to show all elements in datagrid
-                        MainDatabaseXAML.ItemsSource = elements.ToList(); // displaying everything as list
+                        showFinishedItemsOrAll();
 
-                        entities.Dispose();
+                        mainScreenEntity.Dispose();
                     }
                     else
                     {
@@ -216,15 +279,15 @@ namespace DBAppCK
                         mainTableUpdate.Name = TextElementName.Text;
                         mainTableUpdate.Quantity = Convert.ToInt32(TextElementQuantity.Text);
 
-                        //newSourceFile values are replaced by mainTableUpdate that is stroing replaced elements
+                        //newSourceFile values are replaced by mainTableUpdate that is string replaced elements
                         //(new System.Collections.Generic.Mscorlib_CollectionDebugView<DBAppCK.MainTable>(newSourceFile).Items[0]).Client_Name <- !!Debugging!!
-                        newSourceFile[MainDatabaseXAML.SelectedIndex].Planned_Week = mainTableUpdate.Planned_Week;
-                        newSourceFile[MainDatabaseXAML.SelectedIndex].Actual_Week = mainTableUpdate.Actual_Week;
-                        newSourceFile[MainDatabaseXAML.SelectedIndex].Weight = mainTableUpdate.Weight;
-                        newSourceFile[MainDatabaseXAML.SelectedIndex].Order = mainTableUpdate.Order;
-                        newSourceFile[MainDatabaseXAML.SelectedIndex].Client_Name = mainTableUpdate.Client_Name;
-                        newSourceFile[MainDatabaseXAML.SelectedIndex].Name = mainTableUpdate.Name;
-                        newSourceFile[MainDatabaseXAML.SelectedIndex].Quantity = mainTableUpdate.Quantity;
+                        loadedExcelFile[MainDatabaseXAML.SelectedIndex].Planned_Week = mainTableUpdate.Planned_Week;
+                        loadedExcelFile[MainDatabaseXAML.SelectedIndex].Actual_Week = mainTableUpdate.Actual_Week;
+                        loadedExcelFile[MainDatabaseXAML.SelectedIndex].Weight = mainTableUpdate.Weight;
+                        loadedExcelFile[MainDatabaseXAML.SelectedIndex].Order = mainTableUpdate.Order;
+                        loadedExcelFile[MainDatabaseXAML.SelectedIndex].Client_Name = mainTableUpdate.Client_Name;
+                        loadedExcelFile[MainDatabaseXAML.SelectedIndex].Name = mainTableUpdate.Name;
+                        loadedExcelFile[MainDatabaseXAML.SelectedIndex].Quantity = mainTableUpdate.Quantity;
 
                         //Clearing text boxes
                         TextElementPlannedWeek.Text = string.Empty;
@@ -236,7 +299,7 @@ namespace DBAppCK
                         TextElementQuantity.Text = string.Empty;
 
                         //Displaying source and refreshing so that values are visable
-                        MainDatabaseXAML.ItemsSource = newSourceFile;
+                        MainDatabaseXAML.ItemsSource = loadedExcelFile;
                         MainDatabaseXAML.Items.Refresh();
 
                     }
@@ -252,20 +315,20 @@ namespace DBAppCK
 
         private void MainDatabaseXAML_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            using (MainDataBaseEntities entities = new MainDataBaseEntities())
+            using (MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities())
             {
-                MainTable mainTableDisplayRow = (MainTable)MainDatabaseXAML.SelectedItem;
-                if (mainTableDisplayRow != null)
+                MainTable mainTableDisplayRowAt = (MainTable)MainDatabaseXAML.SelectedItem;
+                if (mainTableDisplayRowAt != null)
                 {
-                    entities.MainTables.Attach(mainTableDisplayRow);
+                    mainScreenEntity.MainTables.Attach(mainTableDisplayRowAt);
 
-                    TextElementPlannedWeek.Text = Convert.ToString(mainTableDisplayRow.Planned_Week);
-                    TextElementActualWeek.Text = Convert.ToString(mainTableDisplayRow.Actual_Week);
-                    TextElementWeight.Text = Convert.ToString(mainTableDisplayRow.Weight);
-                    TextElementOrder.Text = mainTableDisplayRow.Order;
-                    TextElementClientName.Text = mainTableDisplayRow.Client_Name;
-                    TextElementName.Text = mainTableDisplayRow.Name;
-                    TextElementQuantity.Text = Convert.ToString(mainTableDisplayRow.Quantity);
+                    TextElementPlannedWeek.Text = Convert.ToString(mainTableDisplayRowAt.Planned_Week);
+                    TextElementActualWeek.Text = Convert.ToString(mainTableDisplayRowAt.Actual_Week);
+                    TextElementWeight.Text = Convert.ToString(mainTableDisplayRowAt.Weight);
+                    TextElementOrder.Text = mainTableDisplayRowAt.Order;
+                    TextElementClientName.Text = mainTableDisplayRowAt.Client_Name;
+                    TextElementName.Text = mainTableDisplayRowAt.Name;
+                    TextElementQuantity.Text = Convert.ToString(mainTableDisplayRowAt.Quantity);
                 }
             }
         }
@@ -273,7 +336,7 @@ namespace DBAppCK
         private void Search_Click(object sender, RoutedEventArgs e)
         {
 
-            using (MainDataBaseEntities entities = new MainDataBaseEntities())
+            using (MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities())
             {
                 var SelectedItem = (ComboBoxItem)searchList.SelectedValue;
                 if (SelectedItem == null)
@@ -282,45 +345,47 @@ namespace DBAppCK
                 }
                 else
                 {
+                    
+                    var selectedTextToSearch = ((TextBlock)SelectedItem.Content).Text; //Debugging window shows exact variable
 
-                    var content = ((TextBlock)SelectedItem.Content).Text; //Debugging window shows exact variable
-
-                    if (newSourceFile.Count == 0)
+                    if (loadedExcelFile.Count == 0)
                     {
-                        if (content == "Planned Week")
+                        if (selectedTextToSearch == "Planned Week")
                         {
-                            var elements = from el in entities.MainTables.ToList() where (Convert.ToString(el.Planned_Week).Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
-                            MainDatabaseXAML.ItemsSource = elements.ToList();
+                            var searchedElements = from el in mainScreenEntity.MainTables.ToList() where (Convert.ToString(el.Planned_Week).Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
+                            MainDatabaseXAML.ItemsSource = searchedElements.ToList();
                         }
-                        else if (content == "Actual Week")
+                        else if (selectedTextToSearch == "Actual Week")
                         {
-                            var elements = from el in entities.MainTables.ToList() where (Convert.ToString(el.Actual_Week).Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
-                            MainDatabaseXAML.ItemsSource = elements.ToList();
+                            
+                            var searchedElements = from el in mainScreenEntity.MainTables.ToList() where (Convert.ToString(el.Actual_Week).Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
+                            MainDatabaseXAML.ItemsSource = searchedElements.ToList();
+                            
                         }
-                        else if (content == "Weight")
+                        else if (selectedTextToSearch == "Weight")
                         {
-                            var elements = from el in entities.MainTables.ToList() where (Convert.ToString(el.Weight).Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
-                            MainDatabaseXAML.ItemsSource = elements.ToList();
+                            var searchedElements = from el in mainScreenEntity.MainTables.ToList() where (Convert.ToString(el.Weight).Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
+                            MainDatabaseXAML.ItemsSource = searchedElements.ToList();
                         }
-                        else if (content == "Order")
+                        else if (selectedTextToSearch == "Order")
                         {
-                            var elements = from el in entities.MainTables where (el.Order.Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
-                            MainDatabaseXAML.ItemsSource = elements.ToList();
+                            var searchedElements = from el in mainScreenEntity.MainTables where (el.Order.Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
+                            MainDatabaseXAML.ItemsSource = searchedElements.ToList();
                         }
-                        else if (content == "Client Name")
+                        else if (selectedTextToSearch == "Client Name")
                         {
-                            var elements = from el in entities.MainTables where (el.Client_Name.Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
-                            MainDatabaseXAML.ItemsSource = elements.ToList();
+                            var searchedElements = from el in mainScreenEntity.MainTables where (el.Client_Name.Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
+                            MainDatabaseXAML.ItemsSource = searchedElements.ToList();
                         }
-                        else if (content == "Name")
+                        else if (selectedTextToSearch == "Name")
                         {
-                            var elements = from el in entities.MainTables where (el.Name.Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
-                            MainDatabaseXAML.ItemsSource = elements.ToList();
+                            var searchedElements = from el in mainScreenEntity.MainTables where (el.Name.Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
+                            MainDatabaseXAML.ItemsSource = searchedElements.ToList();
                         }
-                        else if (content == "Quantity")
+                        else if (selectedTextToSearch == "Quantity")
                         {
-                            var elements = from el in entities.MainTables.ToList() where (Convert.ToString(el.Quantity).Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
-                            MainDatabaseXAML.ItemsSource = elements.ToList();
+                            var searchedElements = from el in mainScreenEntity.MainTables.ToList() where (Convert.ToString(el.Quantity).Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
+                            MainDatabaseXAML.ItemsSource = searchedElements.ToList();
                         }
                         else
                         {
@@ -329,46 +394,46 @@ namespace DBAppCK
                     }
                     else
                     {
-                        if (content == "Planned Week")
+                        if (selectedTextToSearch == "Planned Week")
                         {
-                            var filter = newSourceFile.Where(newSourceFile => (Convert.ToString(newSourceFile.Planned_Week).Contains(SearchItems.Text)));
-                            MainDatabaseXAML.ItemsSource = filter.ToList();
+                            var filterInFile = loadedExcelFile.Where(newSourceFile => (Convert.ToString(newSourceFile.Planned_Week).Contains(SearchItems.Text)));
+                            MainDatabaseXAML.ItemsSource = filterInFile.ToList();
                             MainDatabaseXAML.Items.Refresh();
                         }
-                        else if (content == "Actual Week")
+                        else if (selectedTextToSearch == "Actual Week")
                         {
-                            var filter = newSourceFile.Where(newSourceFile => (Convert.ToString(newSourceFile.Actual_Week).Contains(SearchItems.Text)));
-                            MainDatabaseXAML.ItemsSource = filter.ToList();
+                            var filterInFile = loadedExcelFile.Where(newSourceFile => (Convert.ToString(newSourceFile.Actual_Week).Contains(SearchItems.Text)));
+                            MainDatabaseXAML.ItemsSource = filterInFile.ToList();
                             MainDatabaseXAML.Items.Refresh();
                         }
-                        else if (content == "Weight")
+                        else if (selectedTextToSearch == "Weight")
                         {
-                            var filter = newSourceFile.Where(newSourceFile => (Convert.ToString(newSourceFile.Weight).Contains(SearchItems.Text)));
-                            MainDatabaseXAML.ItemsSource = filter.ToList();
+                            var filterInFile = loadedExcelFile.Where(newSourceFile => (Convert.ToString(newSourceFile.Weight).Contains(SearchItems.Text)));
+                            MainDatabaseXAML.ItemsSource = filterInFile.ToList();
                             MainDatabaseXAML.Items.Refresh();
                         }
-                        else if (content == "Order")
+                        else if (selectedTextToSearch == "Order")
                         {
-                            var filter = newSourceFile.Where(newSourceFile => (newSourceFile.Order).Contains(SearchItems.Text));
-                            MainDatabaseXAML.ItemsSource = filter.ToList();
+                            var filterInFile = loadedExcelFile.Where(newSourceFile => (newSourceFile.Order).Contains(SearchItems.Text));
+                            MainDatabaseXAML.ItemsSource = filterInFile.ToList();
                             MainDatabaseXAML.Items.Refresh();
                         }
-                        else if (content == "Client Name")
+                        else if (selectedTextToSearch == "Client Name")
                         {
-                            var filter = newSourceFile.Where(newSourceFile => (newSourceFile.Client_Name).Contains(SearchItems.Text));
-                            MainDatabaseXAML.ItemsSource = filter.ToList();
+                            var filterInFile = loadedExcelFile.Where(newSourceFile => (newSourceFile.Client_Name).Contains(SearchItems.Text));
+                            MainDatabaseXAML.ItemsSource = filterInFile.ToList();
                             MainDatabaseXAML.Items.Refresh();
                         }
-                        else if (content == "Name")
+                        else if (selectedTextToSearch == "Name")
                         {
-                            var filter = newSourceFile.Where(newSourceFile => (newSourceFile.Name).Contains(SearchItems.Text));
-                            MainDatabaseXAML.ItemsSource = filter.ToList();
+                            var filterInFile = loadedExcelFile.Where(newSourceFile => (newSourceFile.Name).Contains(SearchItems.Text));
+                            MainDatabaseXAML.ItemsSource = filterInFile.ToList();
                             MainDatabaseXAML.Items.Refresh();
                         }
-                        else if (content == "Quantity")
+                        else if (selectedTextToSearch == "Quantity")
                         {
-                            var filter = newSourceFile.Where(newSourceFile => (Convert.ToString(newSourceFile.Quantity).Contains(SearchItems.Text)));
-                            MainDatabaseXAML.ItemsSource = filter.ToList();
+                            var filterInFile = loadedExcelFile.Where(newSourceFile => (Convert.ToString(newSourceFile.Quantity).Contains(SearchItems.Text)));
+                            MainDatabaseXAML.ItemsSource = filterInFile.ToList();
                             MainDatabaseXAML.Items.Refresh();
                         }
                         else
@@ -377,22 +442,15 @@ namespace DBAppCK
                         }
                     }
                 }
-
-
-
-                
-
-
-
             }
         }
 
         private void searchList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var SelectedItem = (ComboBoxItem)searchList.SelectedValue; //Casting SearchList because content is too deep
-            var content = ((TextBlock)SelectedItem.Content).Text; //Debugging window shows exact variable
-
-            MessageBox.Show("You will search database by: " + content, "Search", MessageBoxButton.OK, MessageBoxImage.Information);
+            var selectedItemInCombobox = (ComboBoxItem)searchList.SelectedValue; //Casting SearchList because content is too deep
+            var selectedItem = ((TextBlock)selectedItemInCombobox.Content).Text; //Debugging window shows exact variable
+            
+            MessageBox.Show("You will search database by: " + selectedItem, "Search", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
@@ -430,30 +488,30 @@ namespace DBAppCK
                 using (XLWorkbook workbook = new XLWorkbook())
                 {
 
-                    MainDataBaseEntities entities = new MainDataBaseEntities();
+                    MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities();
 
-                    if (newSourceFile.Count == 0)
+                    if (loadedExcelFile.Count == 0)
                     {
-                        var source = entities.MainTables.ToList(); // List from entity
+                        var source = mainScreenEntity.MainTables.ToList(); // List from entity
 
                         //Inicialization
                         workbook.AddWorksheet("Table");
-                        var wsS = workbook.Worksheet("Table");
-                        var range = wsS.Cell("A2").InsertTable(source, true);
-                        wsS.Columns().AdjustToContents();
+                        var worksheetSave = workbook.Worksheet("Table");
+                        var range = worksheetSave.Cell("A2").InsertTable(source, true);
+                        worksheetSave.Columns().AdjustToContents();
 
 
                         //Cell/View manipulation HEADER
-                        wsS.Cells("A1").Value = "Production Plan - Report based on Main DataBase";
-                        wsS.Range("A1:H1").Merge();
-                        wsS.Range("A1:H1").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                        wsS.Range("A1:H1").Style.Fill.SetBackgroundColor(XLColor.BlueGray);
-                        wsS.Range("A1:H1").Style.Font.FontSize = 16;
-                        wsS.Range("A1:H1").Style.Font.Bold = true;
-                        wsS.Range("A1:H1").Style.Font.FontColor = XLColor.Blue;
+                        worksheetSave.Cells("A1").Value = "Production Plan - Report based on Main DataBase";
+                        worksheetSave.Range("A1:H1").Merge();
+                        worksheetSave.Range("A1:H1").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                        worksheetSave.Range("A1:H1").Style.Fill.SetBackgroundColor(XLColor.BlueGray);
+                        worksheetSave.Range("A1:H1").Style.Font.FontSize = 16;
+                        worksheetSave.Range("A1:H1").Style.Font.Bold = true;
+                        worksheetSave.Range("A1:H1").Style.Font.FontColor = XLColor.Blue;
 
                         //Layout manipulation - in development
-                        wsS.Row(2).Style.Fill.SetBackgroundColor(XLColor.DarkGray);
+                        worksheetSave.Row(2).Style.Fill.SetBackgroundColor(XLColor.DarkGray);
 
                         workbook.SaveAs(saveFileDialog.FileName);
                     }
@@ -461,21 +519,21 @@ namespace DBAppCK
                     {
                         //Inicialization
                         workbook.AddWorksheet("Table");
-                        var wsS = workbook.Worksheet("Table");
-                        var range = wsS.Cell("A2").InsertTable(newSourceFile, true);
-                        wsS.Columns().AdjustToContents();
+                        var worksheetSave = workbook.Worksheet("Table");
+                        var range = worksheetSave.Cell("A2").InsertTable(loadedExcelFile, true);
+                        worksheetSave.Columns().AdjustToContents();
 
                         //Cell/View manipulation HEADER
-                        wsS.Cells("A1").Value = "Production Plan - Report based on Main DataBase";
-                        wsS.Range("A1:H1").Merge();
-                        wsS.Range("A1:H1").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                        wsS.Range("A1:H1").Style.Fill.SetBackgroundColor(XLColor.BlueGray);
-                        wsS.Range("A1:H1").Style.Font.FontSize = 16;
-                        wsS.Range("A1:H1").Style.Font.Bold = true;
-                        wsS.Range("A1:H1").Style.Font.FontColor = XLColor.Blue;
+                        worksheetSave.Cells("A1").Value = "Production Plan - Report based on Main DataBase";
+                        worksheetSave.Range("A1:H1").Merge();
+                        worksheetSave.Range("A1:H1").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                        worksheetSave.Range("A1:H1").Style.Fill.SetBackgroundColor(XLColor.BlueGray);
+                        worksheetSave.Range("A1:H1").Style.Font.FontSize = 16;
+                        worksheetSave.Range("A1:H1").Style.Font.Bold = true;
+                        worksheetSave.Range("A1:H1").Style.Font.FontColor = XLColor.Blue;
 
                         //Layout manipulation - in development
-                        wsS.Row(2).Style.Fill.SetBackgroundColor(XLColor.DarkGray);
+                        worksheetSave.Row(2).Style.Fill.SetBackgroundColor(XLColor.DarkGray);
 
                         workbook.SaveAs(saveFileDialog.FileName);
                     }
@@ -497,36 +555,36 @@ namespace DBAppCK
             {
                 using (XLWorkbook workbook = new XLWorkbook(openFileDialog.FileName))
                 {
-                    MainDataBaseEntities entities = new MainDataBaseEntities();
+                    MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities();
                     List<MainTable> openList = new List<MainTable>();
 
 
-                    var wsO = workbook.Worksheet(1); //Use 1 sheet in chosen pathfile
+                    var worksheetOpen = workbook.Worksheet(1); //Use 1 sheet in chosen pathfile
 
                     int rowStart = 3; //Skip header and names
                     int columnStart = 1;
 
 
 
-                    while (string.IsNullOrWhiteSpace(wsO.Cell(rowStart, columnStart).Value?.ToString()) == false) // Is thre data in row? ID number
+                    while (string.IsNullOrWhiteSpace(worksheetOpen.Cell(rowStart, columnStart).Value?.ToString()) == false) // Is thre data in row? ID number
                     {
                         MainTable tableOpen = new MainTable();
 
-                        tableOpen.Id = int.Parse(wsO.Cell(rowStart, columnStart).Value.ToString()); // change value from double to string, and then to int
-                        tableOpen.Planned_Week = int.Parse(wsO.Cell(rowStart, columnStart + 1).Value.ToString());
-                        tableOpen.Actual_Week = int.Parse(wsO.Cell(rowStart, columnStart + 2).Value.ToString());
-                        tableOpen.Weight = double.Parse(wsO.Cell(rowStart, columnStart + 3).Value.ToString());
-                        tableOpen.Order = wsO.Cell(rowStart, columnStart + 4).Value.ToString();
-                        tableOpen.Client_Name = wsO.Cell(rowStart, columnStart + 5).Value.ToString();
-                        tableOpen.Name = wsO.Cell(rowStart, columnStart + 6).Value.ToString();
-                        tableOpen.Quantity = int.Parse(wsO.Cell(rowStart, columnStart + 7).Value.ToString());
+                        tableOpen.Id = int.Parse(worksheetOpen.Cell(rowStart, columnStart).Value.ToString()); // change value from double to string, and then to int
+                        tableOpen.Planned_Week = int.Parse(worksheetOpen.Cell(rowStart, columnStart + 1).Value.ToString());
+                        tableOpen.Actual_Week = int.Parse(worksheetOpen.Cell(rowStart, columnStart + 2).Value.ToString());
+                        tableOpen.Weight = double.Parse(worksheetOpen.Cell(rowStart, columnStart + 3).Value.ToString());
+                        tableOpen.Order = worksheetOpen.Cell(rowStart, columnStart + 4).Value.ToString();
+                        tableOpen.Client_Name = worksheetOpen.Cell(rowStart, columnStart + 5).Value.ToString();
+                        tableOpen.Name = worksheetOpen.Cell(rowStart, columnStart + 6).Value.ToString();
+                        tableOpen.Quantity = int.Parse(worksheetOpen.Cell(rowStart, columnStart + 7).Value.ToString());
 
                         openList.Add(tableOpen);
                         rowStart++;
                     }
 
                     MainDatabaseXAML.ItemsSource = openList;
-                    newSourceFile = openList;
+                    loadedExcelFile = openList;
                 }
             }
             catch (Exception ex)
@@ -538,36 +596,29 @@ namespace DBAppCK
 
         private void Test_Click(object sender, RoutedEventArgs e)
         {
-
+            MessageBox.Show(GetWeekNumber((DateTime)weekCalendar.SelectedDate).ToString());
         }
 
         private void FinishedChecker_Click(object sender, RoutedEventArgs e)
         {
 
-            using (MainDataBaseEntities entities = new MainDataBaseEntities())
+            using (MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities())
             {
 
                 MainTable mainTableCheck = (MainTable)MainDatabaseXAML.SelectedItem;
 
                 mainTableCheck.IsFinished = mainTableCheck.IsFinished.Value;
-                entities.MainTables.Attach(mainTableCheck);
-                entities.MainTables.Remove(mainTableCheck);
+                mainScreenEntity.MainTables.Attach(mainTableCheck);
+                mainScreenEntity.MainTables.Remove(mainTableCheck);
 
-                entities.SaveChanges();
-                entities.MainTables.Add(mainTableCheck);
-                entities.SaveChanges();
+                mainScreenEntity.SaveChanges();
+                mainScreenEntity.MainTables.Add(mainTableCheck);
+                mainScreenEntity.SaveChanges();
 
-                //Displaying
-                var elements = from el in entities.MainTables orderby el.Actual_Week ascending select el;
-                MainDatabaseXAML.ItemsSource = elements.ToList();
+                //Displaying                
+                showFinishedItemsOrAll();
 
-                entities.Dispose();
-
-
-                //entities.Entry(mainTableCheck).CurrentValues.SetValues(mainTableCheck.IsFinished.Value);
-                //entities.SaveChanges();
-
-
+                mainScreenEntity.Dispose();
             }
 
 
@@ -589,6 +640,42 @@ namespace DBAppCK
             base.OnMouseLeftButtonDown(e);
 
             this.DragMove();
+        }
+
+        private void FinishedOnly_Click(object sender, RoutedEventArgs e)
+        {
+            showFinishedItemsOrAll();
+            
+        }
+                    
+
+        private void weekCalendar_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            MessageBox.Show(GetWeekNumber((DateTime)weekCalendar.SelectedDate).ToString());
+        }
+
+        private void weekCalendar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            
+        }
+        
+
+        private void RadioButton_Click(object sender, RoutedEventArgs e)
+        {
+            VisibilityCalendarViewModel calendarView = new VisibilityCalendarViewModel();
+            
+            if (calendarVisibilityFlag == false)
+            {
+                calendarView.ShowCalendar = Visibility.Visible;
+                this.DataContext = calendarView.ShowCalendar;
+                calendarVisibilityFlag = true;
+            }
+            else if (calendarVisibilityFlag == true)
+            {
+                this.DataContext = calendarView;
+                calendarVisibilityFlag = false;
+            }
+            
         }
     }
 }

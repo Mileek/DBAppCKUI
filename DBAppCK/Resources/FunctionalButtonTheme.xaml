@@ -20,7 +20,7 @@
                 </Setter.Value>
             </Setter>
 
-            <Setter Property="Background" Value="#FF342244"/>
+            <Setter Property="Background" Value="#FF543175"/>
             
 
         </Style.Setters>
