@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using ClosedXML.Excel;
+using DBAppCK.Model;
 using DBAppCK.ViewModel;
 using Microsoft.Win32;
 
@@ -27,12 +28,13 @@ namespace DBAppCK
     /// </summary>
 
     //
-    //Unique ID don't need to be "Recycled" and the amount of unique records is so big that it is not necessary.
+    //Unique ID don't need to be "Recycled" and the amount of unique records is so big that it is not necessary (to delete it).
     //
 
     public partial class WPFDBAppCK : Window
     {
-        public List<MainTable> loadedExcelFile = new List<MainTable>(); //Public variable that store list from external excel file
+        private List<MainTable> loadedExcelFile = new List<MainTable>(); //Public variable that store list from external excel file
+        private bool calendarVisibilityFlag = false;
         private void showFinishedItemsOrAll()
         {
             MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities();
@@ -83,16 +85,13 @@ namespace DBAppCK
                     }
                 }
             }
+        }
+
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
 
         }
-        private bool calendarVisibilityFlag = false;
-
-        private static int GetWeekNumber(DateTime time)
-        {
-            GregorianCalendar cal = new GregorianCalendar();
-            int week = cal.GetWeekOfYear(time, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
-            return week;
-        }        
 
 
         public WPFDBAppCK()
@@ -109,10 +108,10 @@ namespace DBAppCK
         {
             using (MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities())
             {
-                
+
                 if (loadedExcelFile.Count == 0)
                 {
-                    showFinishedItemsOrAll();               
+                    showFinishedItemsOrAll();
                 }
                 else
                 {
@@ -190,7 +189,7 @@ namespace DBAppCK
                 if (loadedExcelFile.Count == 0)
                 {
                     //Work on base database in entity
-                    
+
                     showFinishedItemsOrAll();
                 }
                 else
@@ -338,6 +337,7 @@ namespace DBAppCK
 
             using (MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities())
             {
+
                 var SelectedItem = (ComboBoxItem)searchList.SelectedValue;
                 if (SelectedItem == null)
                 {
@@ -345,101 +345,32 @@ namespace DBAppCK
                 }
                 else
                 {
-                    
+
                     var selectedTextToSearch = ((TextBlock)SelectedItem.Content).Text; //Debugging window shows exact variable
+                    SearchModel searchModel = new SearchModel();
 
                     if (loadedExcelFile.Count == 0)
                     {
-                        if (selectedTextToSearch == "Planned Week")
+                        if (selectedTextToSearch != string.Empty)
                         {
-                            var searchedElements = from el in mainScreenEntity.MainTables.ToList() where (Convert.ToString(el.Planned_Week).Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
-                            MainDatabaseXAML.ItemsSource = searchedElements.ToList();
+
+                            var filterSource = searchModel.searchMainGrid(selectedTextToSearch, SearchItems.Text);
+                            MainDatabaseXAML.ItemsSource = filterSource;
                         }
-                        else if (selectedTextToSearch == "Actual Week")
+                    }
+                    else if (loadedExcelFile.Count != 0)
+                    {
+                        if (selectedTextToSearch != string.Empty)
                         {
-                            
-                            var searchedElements = from el in mainScreenEntity.MainTables.ToList() where (Convert.ToString(el.Actual_Week).Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
-                            MainDatabaseXAML.ItemsSource = searchedElements.ToList();
-                            
-                        }
-                        else if (selectedTextToSearch == "Weight")
-                        {
-                            var searchedElements = from el in mainScreenEntity.MainTables.ToList() where (Convert.ToString(el.Weight).Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
-                            MainDatabaseXAML.ItemsSource = searchedElements.ToList();
-                        }
-                        else if (selectedTextToSearch == "Order")
-                        {
-                            var searchedElements = from el in mainScreenEntity.MainTables where (el.Order.Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
-                            MainDatabaseXAML.ItemsSource = searchedElements.ToList();
-                        }
-                        else if (selectedTextToSearch == "Client Name")
-                        {
-                            var searchedElements = from el in mainScreenEntity.MainTables where (el.Client_Name.Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
-                            MainDatabaseXAML.ItemsSource = searchedElements.ToList();
-                        }
-                        else if (selectedTextToSearch == "Name")
-                        {
-                            var searchedElements = from el in mainScreenEntity.MainTables where (el.Name.Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
-                            MainDatabaseXAML.ItemsSource = searchedElements.ToList();
-                        }
-                        else if (selectedTextToSearch == "Quantity")
-                        {
-                            var searchedElements = from el in mainScreenEntity.MainTables.ToList() where (Convert.ToString(el.Quantity).Contains(SearchItems.Text)) orderby el.Actual_Week ascending select el;
-                            MainDatabaseXAML.ItemsSource = searchedElements.ToList();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Something gone wrong!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                            var filterSourceExternal = searchModel.searchExternalFile(loadedExcelFile, selectedTextToSearch, SearchItems.Text);
+                            MainDatabaseXAML.ItemsSource = filterSourceExternal;
+                            MainDatabaseXAML.Items.Refresh();
                         }
                     }
                     else
                     {
-                        if (selectedTextToSearch == "Planned Week")
-                        {
-                            var filterInFile = loadedExcelFile.Where(newSourceFile => (Convert.ToString(newSourceFile.Planned_Week).Contains(SearchItems.Text)));
-                            MainDatabaseXAML.ItemsSource = filterInFile.ToList();
-                            MainDatabaseXAML.Items.Refresh();
-                        }
-                        else if (selectedTextToSearch == "Actual Week")
-                        {
-                            var filterInFile = loadedExcelFile.Where(newSourceFile => (Convert.ToString(newSourceFile.Actual_Week).Contains(SearchItems.Text)));
-                            MainDatabaseXAML.ItemsSource = filterInFile.ToList();
-                            MainDatabaseXAML.Items.Refresh();
-                        }
-                        else if (selectedTextToSearch == "Weight")
-                        {
-                            var filterInFile = loadedExcelFile.Where(newSourceFile => (Convert.ToString(newSourceFile.Weight).Contains(SearchItems.Text)));
-                            MainDatabaseXAML.ItemsSource = filterInFile.ToList();
-                            MainDatabaseXAML.Items.Refresh();
-                        }
-                        else if (selectedTextToSearch == "Order")
-                        {
-                            var filterInFile = loadedExcelFile.Where(newSourceFile => (newSourceFile.Order).Contains(SearchItems.Text));
-                            MainDatabaseXAML.ItemsSource = filterInFile.ToList();
-                            MainDatabaseXAML.Items.Refresh();
-                        }
-                        else if (selectedTextToSearch == "Client Name")
-                        {
-                            var filterInFile = loadedExcelFile.Where(newSourceFile => (newSourceFile.Client_Name).Contains(SearchItems.Text));
-                            MainDatabaseXAML.ItemsSource = filterInFile.ToList();
-                            MainDatabaseXAML.Items.Refresh();
-                        }
-                        else if (selectedTextToSearch == "Name")
-                        {
-                            var filterInFile = loadedExcelFile.Where(newSourceFile => (newSourceFile.Name).Contains(SearchItems.Text));
-                            MainDatabaseXAML.ItemsSource = filterInFile.ToList();
-                            MainDatabaseXAML.Items.Refresh();
-                        }
-                        else if (selectedTextToSearch == "Quantity")
-                        {
-                            var filterInFile = loadedExcelFile.Where(newSourceFile => (Convert.ToString(newSourceFile.Quantity).Contains(SearchItems.Text)));
-                            MainDatabaseXAML.ItemsSource = filterInFile.ToList();
-                            MainDatabaseXAML.Items.Refresh();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Something gone wrong!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
+                        MessageBox.Show("Something gone wrong!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
@@ -447,10 +378,13 @@ namespace DBAppCK
 
         private void searchList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+
+
             var selectedItemInCombobox = (ComboBoxItem)searchList.SelectedValue; //Casting SearchList because content is too deep
+
             var selectedItem = ((TextBlock)selectedItemInCombobox.Content).Text; //Debugging window shows exact variable
             
-            MessageBox.Show("You will search database by: " + selectedItem, "Search", MessageBoxButton.OK, MessageBoxImage.Information);
+
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
@@ -584,6 +518,7 @@ namespace DBAppCK
                     }
 
                     MainDatabaseXAML.ItemsSource = openList;
+
                     loadedExcelFile = openList;
                 }
             }
@@ -594,10 +529,17 @@ namespace DBAppCK
         }
 
 
+
+
+
         private void Test_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(GetWeekNumber((DateTime)weekCalendar.SelectedDate).ToString());
+
         }
+
+
+
+
 
         private void FinishedChecker_Click(object sender, RoutedEventArgs e)
         {
@@ -645,29 +587,32 @@ namespace DBAppCK
         private void FinishedOnly_Click(object sender, RoutedEventArgs e)
         {
             showFinishedItemsOrAll();
-            
         }
-                    
+
 
         private void weekCalendar_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            MessageBox.Show(GetWeekNumber((DateTime)weekCalendar.SelectedDate).ToString());
+            CalendarWeekModel selectedWeek = new CalendarWeekModel();
+            var clickedDate = (DateTime)weekCalendar.SelectedDate;
+            string week = "Week: ";
+
+            weekCalendarTextBox.Text = week + selectedWeek.GetWeekNumber(clickedDate).ToString();
+
+            TextElementPlannedWeek.Text = selectedWeek.GetWeekNumber(clickedDate).ToString();
+            TextElementActualWeek.Text = selectedWeek.GetWeekNumber(clickedDate).ToString();
         }
 
-        private void weekCalendar_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            
-        }
-        
+
+
 
         private void RadioButton_Click(object sender, RoutedEventArgs e)
         {
             VisibilityCalendarViewModel calendarView = new VisibilityCalendarViewModel();
-            
             if (calendarVisibilityFlag == false)
             {
                 calendarView.ShowCalendar = Visibility.Visible;
                 this.DataContext = calendarView.ShowCalendar;
+
                 calendarVisibilityFlag = true;
             }
             else if (calendarVisibilityFlag == true)
@@ -675,7 +620,6 @@ namespace DBAppCK
                 this.DataContext = calendarView;
                 calendarVisibilityFlag = false;
             }
-            
         }
     }
 }

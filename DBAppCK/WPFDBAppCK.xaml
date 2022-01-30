@@ -5,14 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         TextOptions.TextFormattingMode="Display"    
         TextOptions.TextRenderingMode="Auto" 
-        xmlns:local="clr-namespace:DBAppCK"
+        xmlns:local="clr-namespace:DBAppCK" xmlns:viewmodel="clr-namespace:DBAppCK.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:VisibilityCalendarViewModel}"
         mc:Ignorable="d"
-        Title="WPFDBAppCK" Height="680" Width="1280" FontFamily="Arial" 
+        Title="WPFDBAppCK" Height="680" Width="1300" FontFamily="Arial" 
         WindowStyle="None"
         Background="Transparent"
-        AllowsTransparency="True"
+        AllowsTransparency="True" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen"
+        
         >
-
+    
+    
     <Border Background="#FF231A2B" BorderThickness="1" CornerRadius="25" MouseLeftButtonDown="DragnMove" >
         <Border.BorderBrush>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -20,7 +22,7 @@
                 <GradientStop Color="DarkRed" Offset="1"/>
             </LinearGradientBrush>
         </Border.BorderBrush>
-
+        <!--Columna and row definitions-->
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
@@ -40,13 +42,9 @@
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Label Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Content="User:"/>
 
-            <StackPanel Grid.Column="0" Grid.RowSpan="4" Grid.Row="4">
-                <RadioButton Content="Log Out" Height="60" Margin="10"
-                             FontSize="24" Foreground="White"
-                             Style="{StaticResource Highlight_BTN}"/>
-            </StackPanel>
+            <!--Top Panel-->
+            <Label Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Content="User:"/>
 
             <Border Grid.Column="1" Margin="10,15,10,15">
                 <DockPanel>
@@ -71,6 +69,8 @@
                     </Menu>
                 </DockPanel>
             </Border>
+
+            <!--Left Panel-->
             <Border Grid.Column="0" Margin="10,0,10,0" CornerRadius="4" Background="#FF342244" Grid.Row="1" MinWidth="125" BorderThickness="1">
                 <Border.BorderBrush>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -80,27 +80,86 @@
                 </Border.BorderBrush>
                 <StackPanel >
                     <Label Margin="10" HorizontalAlignment="Center" Foreground="White" >Search by:</Label>
-                    <ComboBox Margin="5" x:Name="searchList" SelectionChanged="searchList_SelectionChanged" >
-                        <ComboBoxItem x:Name="itemInComboBox">
-                            <TextBlock x:Name="PlannedWeekChoosen" FontWeight="SemiBold" Foreground="BlueViolet">Planned Week</TextBlock>
+                    <ComboBox Style="{DynamicResource ComboBoxList}" Margin="5" x:Name="searchList" SelectionChanged="searchList_SelectionChanged" 
+                              IsTextSearchCaseSensitive="True"
+                              >
+                        <ComboBox.BorderBrush>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#F51D4C"/>
+                                <GradientStop Color="DarkRed" Offset="1"/>
+                            </LinearGradientBrush>
+                        </ComboBox.BorderBrush>
+
+
+                        <ComboBoxItem Background="#FF446A8C">
+                            <ComboBoxItem.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#F51D4C"/>
+                                    <GradientStop Color="DarkRed" Offset="1"/>
+                                </LinearGradientBrush>
+                            </ComboBoxItem.BorderBrush>
+                            
+                            <TextBlock x:Name="PlannedWeekChoosen" FontWeight="SemiBold" Foreground="White">Planned Week</TextBlock>
                         </ComboBoxItem>
-                        <ComboBoxItem>
-                            <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Actual Week</TextBlock>
+                        <ComboBoxItem Background="#FF446A8C">
+                            <ComboBoxItem.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#F51D4C"/>
+                                    <GradientStop Color="DarkRed" Offset="1"/>
+                                </LinearGradientBrush>
+                            </ComboBoxItem.BorderBrush>
+                            
+                            <TextBlock FontWeight="SemiBold" Foreground="White">Actual Week</TextBlock>
                         </ComboBoxItem>
-                        <ComboBoxItem>
-                            <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Weight</TextBlock>
+                        <ComboBoxItem Background="#FF446A8C">
+                            <ComboBoxItem.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#F51D4C"/>
+                                    <GradientStop Color="DarkRed" Offset="1"/>
+                                </LinearGradientBrush>
+                            </ComboBoxItem.BorderBrush>
+                            
+                            <TextBlock FontWeight="SemiBold" Foreground="White">Weight</TextBlock>
                         </ComboBoxItem>
-                        <ComboBoxItem>
-                            <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Order</TextBlock>
+                        <ComboBoxItem Background="#FF446A8C">
+                            <ComboBoxItem.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#F51D4C"/>
+                                    <GradientStop Color="DarkRed" Offset="1"/>
+                                </LinearGradientBrush>
+                            </ComboBoxItem.BorderBrush>
+                            
+                            <TextBlock FontWeight="SemiBold" Foreground="White">Order</TextBlock>
                         </ComboBoxItem>
-                        <ComboBoxItem>
-                            <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Client Name</TextBlock>
+                        <ComboBoxItem Background="#FF446A8C">
+                            <ComboBoxItem.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#F51D4C"/>
+                                    <GradientStop Color="DarkRed" Offset="1"/>
+                                </LinearGradientBrush>
+                            </ComboBoxItem.BorderBrush>
+                            
+                            <TextBlock FontWeight="SemiBold" Foreground="White">Client Name</TextBlock>
                         </ComboBoxItem>
-                        <ComboBoxItem>
-                            <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Name</TextBlock>
+                        <ComboBoxItem Background="#FF446A8C">
+                            <ComboBoxItem.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#F51D4C"/>
+                                    <GradientStop Color="DarkRed" Offset="1"/>
+                                </LinearGradientBrush>
+                            </ComboBoxItem.BorderBrush>
+                            
+                            <TextBlock FontWeight="SemiBold" Foreground="White">Name</TextBlock>
                         </ComboBoxItem>
-                        <ComboBoxItem>
-                            <TextBlock FontWeight="SemiBold" Foreground="BlueViolet">Quantity</TextBlock>
+                        <ComboBoxItem Background="#FF446A8C">
+                            <ComboBoxItem.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#F51D4C"/>
+                                    <GradientStop Color="DarkRed" Offset="1"/>
+                                </LinearGradientBrush>
+                            </ComboBoxItem.BorderBrush>
+                            
+                            <TextBlock FontWeight="SemiBold" Foreground="White">Quantity</TextBlock>
                         </ComboBoxItem>
                     </ComboBox>
                     <TextBox Margin="5"  MinWidth="100" x:Name="SearchItems" 
@@ -121,6 +180,22 @@
                              Style="{StaticResource Highlight_BTN}"/>
                 </StackPanel>
             </Border>
+            <StackPanel Grid.Column="0" Grid.RowSpan="4" Grid.Row="4">
+                <RadioButton Content="Log Out" Height="60" Margin="10"
+                             FontSize="24" Foreground="White"
+                             Style="{StaticResource Highlight_BTN}"/>
+            </StackPanel>
+
+            <GridSplitter Grid.Column="0" Grid.Row="1" Grid.RowSpan="7" HorizontalAlignment="Right" Width="2">
+                <GridSplitter.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#F51D4C" Offset="0"/>
+                        <GradientStop Color="DarkRed" Offset="1"/>
+                    </LinearGradientBrush>
+                </GridSplitter.Background>
+            </GridSplitter>
+
+            <!--Middle Panel-->
             <DataGrid x:Name="MainDatabaseXAML" Grid.Column="1" Grid.Row="1"  
                   Margin="10" HorizontalAlignment="Stretch" 
                   SelectionChanged="MainDatabaseXAML_SelectionChanged" CanUserDeleteRows="False" 
@@ -146,15 +221,8 @@
                 </DataGrid.Columns>
             </DataGrid>
 
-            <GridSplitter Grid.Column="0" Grid.Row="1" Grid.RowSpan="7" HorizontalAlignment="Right" Width="2">
-                <GridSplitter.Background>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                        <GradientStop Color="#F51D4C" Offset="0"/>
-                        <GradientStop Color="DarkRed" Offset="1"/>
-                    </LinearGradientBrush>
-                </GridSplitter.Background>
-            </GridSplitter>
 
+            <!--Bottom Panel-->
             <StackPanel Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="4" Orientation="Horizontal">
                 <Label Content="Enter Planned Week" Margin="3,0,3,3" HorizontalContentAlignment="Center" Width="125" BorderThickness="1" Foreground="White" FontStretch="Normal">
                     <Label.BorderBrush>
@@ -277,6 +345,8 @@
                              Click="Clear_Click"/>
                 <Button Content="Test Function" x:Name="Test" Background="LightSkyBlue" Click="Test_Click"/>
             </StackPanel>
+            
+            <!--Right Panel-->
             <StackPanel Grid.Column="4" Grid.Row="1" Height="30" HorizontalAlignment="Center" Orientation="Horizontal" VerticalAlignment="Top">
                 <RadioButton Content="Calendar" MinWidth="60" Foreground="White" 
                              Style="{StaticResource Functional_BTN}" Click="RadioButton_Click"
@@ -284,14 +354,32 @@
                 <RadioButton Content="Calculator" MinWidth="60" Margin="5,0,0,0" Foreground="White" Style="{StaticResource Functional_BTN}"/>
                 <RadioButton Content="Notes" MinWidth="60" Margin="5,0,0,0" Foreground="White" Style="{StaticResource Functional_BTN}"/>
             </StackPanel>
-            <Calendar Grid.IsSharedSizeScope="True" Language="en-us"
-                      Grid.Column="4" HorizontalAlignment="Left" Margin="10,40,0,0" 
-                      Grid.Row="1" VerticalAlignment="Top"
+            <Viewbox Height="200" Grid.Column="4" Grid.Row="1" 
+                     Margin="0,40,0,0" VerticalAlignment="Top"
+                     HorizontalAlignment="Left" >
+                <Calendar Grid.IsSharedSizeScope="True" Language="en-us"
                       Name="weekCalendar"
-                      FirstDayOfWeek="Monday" MouseDoubleClick="weekCalendar_MouseDoubleClick" MouseDown="weekCalendar_MouseDown"
-                      Visibility="{Binding Path=ShowCalendar}"
-                      
-                />
+                      FirstDayOfWeek="Monday" MouseDoubleClick="weekCalendar_MouseDoubleClick" 
+                      Visibility="{Binding ShowCalendar}"
+                      BorderThickness="2"    
+                      Background="LightGray"    
+                    >
+                    <Calendar.BorderBrush>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#F51D4C" Offset="0"/>
+                            <GradientStop Color="DarkRed" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Calendar.BorderBrush>
+                </Calendar>
+            </Viewbox>
+            <TextBox Grid.Column="4" Grid.Row="1" Height="25" 
+                     Width="200" HorizontalAlignment="Center"
+                     Background="LightGray"
+                     x:Name="weekCalendarTextBox"
+                     TextAlignment="Center"
+                     VerticalContentAlignment="Center"
+                     Visibility="{Binding ShowCalendar}"
+                     IsReadOnly="True"/>
         </Grid>
     </Border>
 </Window>
