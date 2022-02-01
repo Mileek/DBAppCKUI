@@ -1,0 +1,399 @@
+﻿<Window x:Class="DBAppCK.View.WPFDBAppCK"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"        
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        TextOptions.TextFormattingMode="Display"    
+        TextOptions.TextRenderingMode="Auto" 
+        xmlns:local="clr-namespace:DBAppCK" xmlns:viewmodel="clr-namespace:DBAppCK.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:VisibilityCalendarViewModel}"
+        mc:Ignorable="d"
+        Title="WPFDBAppCK" Height="680" Width="1300" FontFamily="Arial" 
+        WindowStyle="None"
+        Background="Transparent"
+        AllowsTransparency="True" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen"
+        
+        >
+    
+    
+    <Border Background="#FF231A2B" BorderThickness="1" CornerRadius="25" MouseLeftButtonDown="DragnMove" >
+        <Border.BorderBrush>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#F51D4C"/>
+                <GradientStop Color="DarkRed" Offset="1"/>
+            </LinearGradientBrush>
+        </Border.BorderBrush>
+        <!--Columna and row definitions-->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition MinHeight="500" Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!--Top Panel-->
+            <Label Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Content="User:"/>
+
+            <Border Grid.Column="1" Margin="10,15,10,15">
+                <DockPanel HorizontalAlignment="Left" LastChildFill="True">
+                    <Menu Style="{DynamicResource MainMenu}" Height="Auto" DockPanel.Dock="Top" Width="Auto">
+                        <!--For now it could stay, but there are many things to change here-->
+                        <MenuItem Header="File">
+                            <MenuItem Header="Open" Click="Open_Click"/>
+                            <MenuItem Header="Save" Click="Save_Click"/>
+                            <MenuItem Header="Save As" Click="SaveAs_Click"/>
+                            <Separator/>
+                            <MenuItem Header="Exit" Click="Exit_Click"/>
+                        </MenuItem>
+                        <MenuItem Header="Edit">
+                            <MenuItem Header="Cut"/>
+                            <MenuItem Header="Copy"/>
+                            <MenuItem Header="Paste"/>
+                        </MenuItem>
+                        <MenuItem Header="Tools">
+                            <MenuItem Header="Log Out"/>
+                            <MenuItem Header="Copy"/>
+                            <MenuItem Header="Is Finished?" x:Name="FinishedOnly" IsCheckable="True" IsChecked="False" Click="FinishedOnly_Click" />
+                            <MenuItem Header="Build-In Calculator" x:Name="systemCalculator" IsCheckable="True" IsChecked="False" Click="systemCalculator_Click" />
+                        </MenuItem>
+                    </Menu>
+                </DockPanel>
+            </Border>
+
+            <!--Left Panel-->
+            <Border Grid.Column="0" Margin="10,0,10,0" CornerRadius="4" Background="#FF342244" Grid.Row="1" MinWidth="125" BorderThickness="1">
+                <Border.BorderBrush>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#F51D4C"/>
+                        <GradientStop Color="DarkRed" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.BorderBrush>
+                <StackPanel >
+                    <Label Margin="10" HorizontalAlignment="Center" Foreground="White" >Search by:</Label>
+                    <ComboBox Style="{DynamicResource ComboBoxList}" Margin="5" x:Name="searchList" SelectionChanged="searchList_SelectionChanged" 
+                              IsTextSearchCaseSensitive="True"
+                              >
+                        <ComboBox.BorderBrush>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#F51D4C"/>
+                                <GradientStop Color="DarkRed" Offset="1"/>
+                            </LinearGradientBrush>
+                        </ComboBox.BorderBrush>
+
+
+                        <ComboBoxItem Background="#FF446A8C">
+                            <ComboBoxItem.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#F51D4C"/>
+                                    <GradientStop Color="DarkRed" Offset="1"/>
+                                </LinearGradientBrush>
+                            </ComboBoxItem.BorderBrush>
+                            
+                            <TextBlock x:Name="PlannedWeekChoosen" FontWeight="SemiBold" Foreground="White">Planned Week</TextBlock>
+                        </ComboBoxItem>
+                        <ComboBoxItem Background="#FF446A8C">
+                            <ComboBoxItem.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#F51D4C"/>
+                                    <GradientStop Color="DarkRed" Offset="1"/>
+                                </LinearGradientBrush>
+                            </ComboBoxItem.BorderBrush>
+                            
+                            <TextBlock FontWeight="SemiBold" Foreground="White">Actual Week</TextBlock>
+                        </ComboBoxItem>
+                        <ComboBoxItem Background="#FF446A8C">
+                            <ComboBoxItem.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#F51D4C"/>
+                                    <GradientStop Color="DarkRed" Offset="1"/>
+                                </LinearGradientBrush>
+                            </ComboBoxItem.BorderBrush>
+                            
+                            <TextBlock FontWeight="SemiBold" Foreground="White">Weight</TextBlock>
+                        </ComboBoxItem>
+                        <ComboBoxItem Background="#FF446A8C">
+                            <ComboBoxItem.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#F51D4C"/>
+                                    <GradientStop Color="DarkRed" Offset="1"/>
+                                </LinearGradientBrush>
+                            </ComboBoxItem.BorderBrush>
+                            
+                            <TextBlock FontWeight="SemiBold" Foreground="White">Order</TextBlock>
+                        </ComboBoxItem>
+                        <ComboBoxItem Background="#FF446A8C">
+                            <ComboBoxItem.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#F51D4C"/>
+                                    <GradientStop Color="DarkRed" Offset="1"/>
+                                </LinearGradientBrush>
+                            </ComboBoxItem.BorderBrush>
+                            
+                            <TextBlock FontWeight="SemiBold" Foreground="White">Client Name</TextBlock>
+                        </ComboBoxItem>
+                        <ComboBoxItem Background="#FF446A8C">
+                            <ComboBoxItem.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#F51D4C"/>
+                                    <GradientStop Color="DarkRed" Offset="1"/>
+                                </LinearGradientBrush>
+                            </ComboBoxItem.BorderBrush>
+                            
+                            <TextBlock FontWeight="SemiBold" Foreground="White">Name</TextBlock>
+                        </ComboBoxItem>
+                        <ComboBoxItem Background="#FF446A8C">
+                            <ComboBoxItem.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#F51D4C"/>
+                                    <GradientStop Color="DarkRed" Offset="1"/>
+                                </LinearGradientBrush>
+                            </ComboBoxItem.BorderBrush>
+                            
+                            <TextBlock FontWeight="SemiBold" Foreground="White">Quantity</TextBlock>
+                        </ComboBoxItem>
+                    </ComboBox>
+                    <TextBox Margin="5"  MinWidth="100" x:Name="SearchItems" 
+                             Foreground="White"
+                             Style="{StaticResource TextBoxValues}"/>
+                    <RadioButton Content="Search" Height="25" Margin="0,5,0,5"
+                             FontSize="16" Foreground="White"
+                             Style="{StaticResource Search_BTN}"
+                             Click="Search_Click"/>
+                    <RadioButton Height="35"  Margin="0,5,0,5"
+                             FontSize="16" Foreground="White" Content="Menu 1"
+                             Style="{StaticResource Highlight_BTN}"/>
+                    <RadioButton Height="35" Margin="0,5,0,5"
+                             FontSize="16" Foreground="White" Content="Menu 2"
+                             Style="{StaticResource Highlight_BTN}"/>
+                    <RadioButton Height="35" Margin="0,5,0,5"
+                             FontSize="16" Foreground="White" Content="Menu 3"
+                             Style="{StaticResource Highlight_BTN}"/>
+                </StackPanel>
+            </Border>
+            <StackPanel Grid.Column="0" Grid.RowSpan="4" Grid.Row="4">
+                <RadioButton Content="Log Out" Height="60" Margin="10"
+                             FontSize="24" Foreground="White"
+                             Style="{StaticResource Highlight_BTN}"/>
+            </StackPanel>
+
+            <GridSplitter Grid.Column="0" Grid.Row="1" Grid.RowSpan="7" HorizontalAlignment="Right" Width="2">
+                <GridSplitter.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#F51D4C" Offset="0"/>
+                        <GradientStop Color="DarkRed" Offset="1"/>
+                    </LinearGradientBrush>
+                </GridSplitter.Background>
+            </GridSplitter>
+
+            <!--Middle Panel-->
+            <DataGrid Style="{DynamicResource DataGridStyle}" x:Name="MainDatabaseXAML" Grid.Column="1" Grid.Row="1"  
+                      Margin="10" HorizontalAlignment="Stretch" 
+                      SelectionChanged="MainDatabaseXAML_SelectionChanged" CanUserDeleteRows="False" 
+                      CanUserAddRows="False" VerticalAlignment="Top" 
+                      Background="#FF342244" AutoGenerateColumns="False"
+                      GridLinesVisibility="None"
+                      HeadersVisibility="Column"                      
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Auto"
+                      MaxHeight="480"
+                      >
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Unique Id" Binding="{Binding Id}"/>
+                    <DataGridTextColumn Header="Planned Week" Binding="{Binding Planned_Week}"/>
+                    <DataGridTextColumn Header="Actual Week" Binding="{Binding Actual_Week}"/>
+                    <DataGridTextColumn Header="Weight" Binding="{Binding Weight}"/>
+                    <DataGridTextColumn Header="Order" Binding="{Binding Order}"/>
+                    <DataGridTextColumn Header="Client Name" Binding="{Binding Client_Name}"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}"/>
+                    <DataGridTemplateColumn Header="IsFinished?">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox Name="FinishedChecker" IsThreeState="False"
+                                          HorizontalAlignment="Center"
+                                          IsChecked="{Binding Path= IsFinished, UpdateSourceTrigger=PropertyChanged}" Click="FinishedChecker_Click" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+
+            <!--Bottom Panel-->
+            <StackPanel Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="4" Orientation="Horizontal">
+                <Label Content="Enter Planned Week" Margin="3,0,3,3" HorizontalContentAlignment="Center" Width="125" BorderThickness="1" Foreground="White" FontStretch="Normal">
+                    <Label.BorderBrush>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#F51D4C"/>
+                            <GradientStop Color="DarkRed" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Label.BorderBrush>
+                </Label>
+                <Label Content="Enter Actual Week" Margin="3,0,3,3"  Width="125" HorizontalContentAlignment="Center" BorderThickness="1" Foreground="White">
+                    <Label.BorderBrush>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#F51D4C"/>
+                            <GradientStop Color="DarkRed" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Label.BorderBrush>
+                </Label>
+                <Label Content="Enter Weight" Width="125" Margin="3,0,3,3" HorizontalContentAlignment="Center" BorderThickness="1" Foreground="White">
+                    <Label.BorderBrush>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#F51D4C"/>
+                            <GradientStop Color="DarkRed" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Label.BorderBrush>
+                </Label>
+                <Label Content="Enter Order" Width="125" Margin="3,0,3,3" HorizontalContentAlignment="Center" BorderThickness="1" Foreground="White">
+                    <Label.BorderBrush>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#F51D4C"/>
+                            <GradientStop Color="DarkRed" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Label.BorderBrush>
+                </Label>
+                <Label Content="Enter Client Name" Margin="3,0,3,3" Width="125" HorizontalContentAlignment="Center" BorderThickness="1" Foreground="White">
+                    <Label.BorderBrush>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#F51D4C"/>
+                            <GradientStop Color="DarkRed" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Label.BorderBrush>
+                </Label>
+                <Label Content="Enter Name" Width="125" Margin="3,0,3,3" HorizontalContentAlignment="Center" BorderThickness="1" Foreground="White">
+                    <Label.BorderBrush>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#F51D4C"/>
+                            <GradientStop Color="DarkRed" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Label.BorderBrush>
+                </Label>
+                <Label Content="Enter Quantity" Width="125" Margin="3,0,3,3" HorizontalContentAlignment="Center" BorderThickness="1" Foreground="White">
+                    <Label.BorderBrush>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#F51D4C"/>
+                            <GradientStop Color="DarkRed" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Label.BorderBrush>
+                </Label>
+
+            </StackPanel>
+
+            <StackPanel Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="4" VerticalAlignment="Stretch" Orientation="Horizontal">
+                <TextBox  TextWrapping="Wrap" x:Name="TextElementPlannedWeek" MinWidth="100" 
+                      Width="125" HorizontalAlignment="Left" Margin="3,0,3,3"
+                      BorderThickness="1" Foreground="White"
+                      Style="{StaticResource TextBoxValues}"/>
+                <TextBox  TextWrapping="Wrap" x:Name="TextElementActualWeek" MinWidth="100" 
+                      Width="125" HorizontalAlignment="Left" Margin="3,0,3,3"
+                      BorderThickness="1" Foreground="White"
+                      Style="{StaticResource TextBoxValues}"/>
+                <TextBox  x:Name="TextElementWeight" MinWidth="100"  
+                      Width="125" HorizontalAlignment="Left" Margin="3,0,3,3"
+                      BorderThickness="1" Foreground="White"
+                      Style="{StaticResource TextBoxValues}"/>
+                <TextBox  x:Name="TextElementOrder" MinWidth="100"  
+                      Width="125" HorizontalAlignment="Left" Margin="3,0,3,3"
+                      BorderThickness="1" Foreground="White"
+                      Style="{StaticResource TextBoxValues}"/>
+                <TextBox  x:Name="TextElementClientName" MinWidth="100" 
+                      Width="125" HorizontalAlignment="Left" Margin="3,0,3,3"
+                      BorderThickness="1" Foreground="White"
+                      Style="{StaticResource TextBoxValues}"/>
+                <TextBox  x:Name="TextElementName" MinWidth="100"  
+                      Width="125" HorizontalAlignment="Left" Margin="3,0,3,3"
+                      BorderThickness="1" Foreground="White"
+                      Style="{StaticResource TextBoxValues}"/>
+                <TextBox  x:Name="TextElementQuantity" MinWidth="100" 
+                      Width="125" HorizontalAlignment="Left" Margin="3,0,3,3"
+                      BorderThickness="1" Foreground="White"
+                      Style="{StaticResource TextBoxValues}"/>
+
+
+            </StackPanel>
+
+
+            <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Center">
+                <RadioButton Content="Add New Element" x:Name="AddElementToGrid" 
+                             Margin="10,5,10,5" Height="25" Width="120"
+                             Foreground="White"
+                             Style="{StaticResource Functional_BTN}"
+                             Click="AddNewElementToGrid_Click"/>
+                <RadioButton Content="Show All Entries" x:Name="RunDB" 
+                             Margin="10,5,10,5" Height="25" Width="100"
+                             Foreground="White" 
+                             Style="{StaticResource Functional_BTN}"
+                             Click="RunDB_Click"/>
+                <RadioButton Content="Delete Selected Record" x:Name="DeleteRecord"
+                             Margin="10,5,10,5" Height="25" Width="150"
+                             Foreground="White"
+                             Style="{StaticResource Functional_BTN}"
+                        Click="DeleteRecord_Click"/>
+                <RadioButton Content="Update" x:Name="Update"
+                             Margin="10,5,10,5" Height="25" Width="60"
+                             Foreground="White"
+                             Style="{StaticResource Functional_BTN}"
+                             Click="Update_Click"/>
+                <RadioButton Content="Clear" x:Name="Clear"
+                             Margin="10,5,10,5" Height="25" Width="50"
+                             Foreground="White"
+                             Style="{StaticResource Functional_BTN}"
+                             Click="Clear_Click"/>
+                <Button Content="Test Function" x:Name="Test" Background="LightSkyBlue" Click="Test_Click"/>
+            </StackPanel>
+            
+            <!--Right Panel-->
+            <StackPanel Grid.Column="4" Grid.Row="1" Height="30" HorizontalAlignment="Center" Orientation="Horizontal" VerticalAlignment="Top">
+                <RadioButton Content="Calendar" MinWidth="60" Foreground="White" 
+                             Style="{StaticResource Functional_BTN}" Click="CalendarButton_Click"
+                             />
+                <RadioButton Content="Calculator" MinWidth="60" Margin="5,0,0,0" Foreground="White" 
+                             Style="{StaticResource Functional_BTN}" 
+                             x:Name="Calculator" Click="CalculatorButton_Click" />
+                <RadioButton Content="Notes" MinWidth="60" Margin="5,0,0,0" Foreground="White"
+                             Style="{StaticResource Functional_BTN}" Click="NotesButton_Click"
+                             />
+            </StackPanel>
+            <Viewbox Height="200" Grid.Column="4" Grid.Row="1" 
+                     Margin="0,40,0,0" VerticalAlignment="Top"
+                     HorizontalAlignment="Left" >
+                <Calendar Grid.IsSharedSizeScope="True" Language="en-us"
+                      Name="weekCalendar"
+                      FirstDayOfWeek="Monday" MouseDoubleClick="weekCalendar_MouseDoubleClick" 
+                      Visibility="{Binding ShowCalendar}"
+                      BorderThickness="2"    
+                      Background="LightGray"    
+                    >
+                    <Calendar.BorderBrush>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#F51D4C" Offset="0"/>
+                            <GradientStop Color="DarkRed" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Calendar.BorderBrush>
+                </Calendar>
+            </Viewbox>
+            <TextBox Grid.Column="4" Grid.Row="1" Height="25" 
+                     Width="200" HorizontalAlignment="Center"
+                     Background="LightGray"
+                     x:Name="weekCalendarTextBox"
+                     TextAlignment="Center"
+                     VerticalContentAlignment="Center"
+                     Visibility="{Binding ShowCalendar}"
+                     IsReadOnly="True"/>
+        </Grid>
+    </Border>
+</Window>

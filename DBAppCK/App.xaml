@@ -2,8 +2,20 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:DBAppCK"
-             StartupUri="WPFDBAppCK.xaml">
+             StartupUri="View/WPFDBAppCK.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/MenuButtonTheme.xaml"/>
+                <ResourceDictionary Source="Resources/FunctionalButtonTheme.xaml"/>
+                <ResourceDictionary Source="Resources/SearchButtonTheme.xaml"/>
+                <ResourceDictionary Source="Resources/TextBoxTheme.xaml"/>
+                <ResourceDictionary Source="Resources/TextBoxEmptyTheme.xaml"/>
+                <ResourceDictionary Source="Resources/ComboBoxTheme.xaml"/>
+                <ResourceDictionary Source="Resources/MenuTheme.xaml"/>
+                <ResourceDictionary Source="Resources/DataGridTheme.xaml"/>
+                <ResourceDictionary Source="Resources/RichTextBoxTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
