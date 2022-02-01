@@ -26,7 +26,7 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
+                <RowDefinition MinHeight="500" Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
@@ -47,24 +47,26 @@
             <Label Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Content="User:"/>
 
             <Border Grid.Column="1" Margin="10,15,10,15">
-                <DockPanel>
-                    <Menu DockPanel.Dock="Top"  Background="Transparent" Foreground="White">
-                        <MenuItem Header="_File" Background="#FF231A2B">
-                            <MenuItem Header="_Open" Click="Open_Click" Background="#FF231A2B"/>
-                            <MenuItem Header="_Save" Click="Save_Click" Background="#FF231A2B"/>
-                            <MenuItem Header="_Save As" Click="SaveAs_Click" Background="#FF231A2B"/>
+                <DockPanel HorizontalAlignment="Left" LastChildFill="True">
+                    <Menu Style="{DynamicResource MainMenu}" Height="Auto" DockPanel.Dock="Top" Width="Auto">
+                        <!--For now it could stay, but there are many things to change here-->
+                        <MenuItem Header="File">
+                            <MenuItem Header="Open" Click="Open_Click"/>
+                            <MenuItem Header="Save" Click="Save_Click"/>
+                            <MenuItem Header="Save As" Click="SaveAs_Click"/>
                             <Separator/>
-                            <MenuItem Header="Exit" Click="Exit_Click" Background="#FF231A2B"/>
+                            <MenuItem Header="Exit" Click="Exit_Click"/>
                         </MenuItem>
-                        <MenuItem Header="_Edit">
-                            <MenuItem Header="_Cut"/>
-                            <MenuItem Header="_Copy"/>
-                            <MenuItem Header="_Paste"/>
+                        <MenuItem Header="Edit">
+                            <MenuItem Header="Cut"/>
+                            <MenuItem Header="Copy"/>
+                            <MenuItem Header="Paste"/>
                         </MenuItem>
-                        <MenuItem Header="_Tools">
-                            <MenuItem Header="_Log Out"/>
-                            <MenuItem Header="_Copy"/>
-                            <MenuItem Header="_Is Finished?" x:Name="FinishedOnly" IsCheckable="True" IsChecked="False"  Background="#FF231A2B" Click="FinishedOnly_Click" />
+                        <MenuItem Header="Tools">
+                            <MenuItem Header="Log Out"/>
+                            <MenuItem Header="Copy"/>
+                            <MenuItem Header="Is Finished?" x:Name="FinishedOnly" IsCheckable="True" IsChecked="False" Click="FinishedOnly_Click" />
+                            <MenuItem Header="Build-In Calculator" x:Name="systemCalculator" IsCheckable="True" IsChecked="False" Click="systemCalculator_Click" />
                         </MenuItem>
                     </Menu>
                 </DockPanel>
@@ -196,25 +198,33 @@
             </GridSplitter>
 
             <!--Middle Panel-->
-            <DataGrid x:Name="MainDatabaseXAML" Grid.Column="1" Grid.Row="1"  
-                  Margin="10" HorizontalAlignment="Stretch" 
-                  SelectionChanged="MainDatabaseXAML_SelectionChanged" CanUserDeleteRows="False" 
-                  CanUserAddRows="False" VerticalAlignment="Center" MinWidth="900" MinHeight="500" 
-                  Background="#FF342244" AutoGenerateColumns="False" >
+            <DataGrid Style="{DynamicResource DataGridStyle}" x:Name="MainDatabaseXAML" Grid.Column="1" Grid.Row="1"  
+                      Margin="10" HorizontalAlignment="Stretch" 
+                      SelectionChanged="MainDatabaseXAML_SelectionChanged" CanUserDeleteRows="False" 
+                      CanUserAddRows="False" VerticalAlignment="Top" 
+                      Background="#FF342244" AutoGenerateColumns="False"
+                      GridLinesVisibility="None"
+                      HeadersVisibility="Column"                      
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Auto"
+                      MaxHeight="480"
+                      >
 
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Unique Id" Binding="{Binding Id}"/>
                     <DataGridTextColumn Header="Planned Week" Binding="{Binding Planned_Week}"/>
                     <DataGridTextColumn Header="Actual Week" Binding="{Binding Actual_Week}"/>
                     <DataGridTextColumn Header="Weight" Binding="{Binding Weight}"/>
-                    <DataGridTextColumn Header="Order" MinWidth="100" Binding="{Binding Order}"/>
-                    <DataGridTextColumn Header="Client Name" MinWidth="100" Binding="{Binding Client_Name}"/>
-                    <DataGridTextColumn Header="Name" MinWidth="100" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Header="Order" Binding="{Binding Order}"/>
+                    <DataGridTextColumn Header="Client Name" Binding="{Binding Client_Name}"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
                     <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}"/>
                     <DataGridTemplateColumn Header="IsFinished?">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox Name="FinishedChecker" IsThreeState="False" IsChecked="{Binding Path= IsFinished, UpdateSourceTrigger=PropertyChanged}" Click="FinishedChecker_Click" />
+                                <CheckBox Name="FinishedChecker" IsThreeState="False"
+                                          HorizontalAlignment="Center"
+                                          IsChecked="{Binding Path= IsFinished, UpdateSourceTrigger=PropertyChanged}" Click="FinishedChecker_Click" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -349,10 +359,14 @@
             <!--Right Panel-->
             <StackPanel Grid.Column="4" Grid.Row="1" Height="30" HorizontalAlignment="Center" Orientation="Horizontal" VerticalAlignment="Top">
                 <RadioButton Content="Calendar" MinWidth="60" Foreground="White" 
-                             Style="{StaticResource Functional_BTN}" Click="RadioButton_Click"
+                             Style="{StaticResource Functional_BTN}" Click="CalendarButton_Click"
                              />
-                <RadioButton Content="Calculator" MinWidth="60" Margin="5,0,0,0" Foreground="White" Style="{StaticResource Functional_BTN}"/>
-                <RadioButton Content="Notes" MinWidth="60" Margin="5,0,0,0" Foreground="White" Style="{StaticResource Functional_BTN}"/>
+                <RadioButton Content="Calculator" MinWidth="60" Margin="5,0,0,0" Foreground="White" 
+                             Style="{StaticResource Functional_BTN}" 
+                             x:Name="Calculator" Click="CalculatorButton_Click" />
+                <RadioButton Content="Notes" MinWidth="60" Margin="5,0,0,0" Foreground="White"
+                             Style="{StaticResource Functional_BTN}" Click="NotesButton_Click"
+                             />
             </StackPanel>
             <Viewbox Height="200" Grid.Column="4" Grid.Row="1" 
                      Margin="0,40,0,0" VerticalAlignment="Top"

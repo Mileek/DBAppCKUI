@@ -10,7 +10,11 @@
                 <ResourceDictionary Source="Resources/FunctionalButtonTheme.xaml"/>
                 <ResourceDictionary Source="Resources/SearchButtonTheme.xaml"/>
                 <ResourceDictionary Source="Resources/TextBoxTheme.xaml"/>
+                <ResourceDictionary Source="Resources/TextBoxEmptyTheme.xaml"/>
                 <ResourceDictionary Source="Resources/ComboBoxTheme.xaml"/>
+                <ResourceDictionary Source="Resources/MenuTheme.xaml"/>
+                <ResourceDictionary Source="Resources/DataGridTheme.xaml"/>
+                <ResourceDictionary Source="Resources/RichTextBoxTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

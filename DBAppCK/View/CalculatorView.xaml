@@ -1,0 +1,98 @@
+﻿<Window x:Class="DBAppCK.View.CalculatorView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DBAppCK.View"
+        mc:Ignorable="d"
+        Title="CalculatorView" Height="250" Width="250"
+        WindowStyle="None"
+        Background="Transparent"
+        FontSize="30"
+        WindowStartupLocation="CenterScreen">
+
+    <Border Background="#FF231A2B" BorderThickness="1" MouseLeftButtonDown="DragnMove">
+        <Border.BorderBrush>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#F51D4C"/>
+                <GradientStop Color="DarkRed" Offset="1"/>
+            </LinearGradientBrush>
+        </Border.BorderBrush>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"
+                     x:Name="Display" FontSize="30" TextWrapping="Wrap"
+                     Style="{DynamicResource TextBoxEmptyValues}"                     
+                     VerticalContentAlignment="Center"
+                     HorizontalContentAlignment="Center">
+                
+            </TextBox>
+            <RadioButton Grid.Column="3" Grid.Row="1"
+                         Content="C" 
+                         Style="{StaticResource Functional_BTN}" Click="DeleteButton_Click"/>
+            <RadioButton Grid.Column="0" Grid.Row="2"
+                         Content="7" 
+                         Style="{StaticResource Functional_BTN}" Click="SevenButton_Click"/>
+            <RadioButton Grid.Column="1" Grid.Row="2"
+                         Content="8" 
+                         Style="{StaticResource Functional_BTN}" Click="EightButton_Click"/>
+            <RadioButton Grid.Column="2" Grid.Row="2"
+                         Content="9"
+                         Style="{StaticResource Functional_BTN}" Click="NineButton_Click"/>
+            <RadioButton Grid.Column="3" Grid.Row="2"
+                         Content="*" 
+                         Style="{StaticResource Functional_BTN}" Click="MultiplyButton_Click"/>
+            <RadioButton Grid.Column="0" Grid.Row="3"
+                         Content="4"
+                         Style="{StaticResource Functional_BTN}" Click="FourButton_Click"/>
+            <RadioButton Grid.Column="1" Grid.Row="3"
+                         Content="5"
+                         Style="{StaticResource Functional_BTN}" Click="FiveButton_Click"/>
+            <RadioButton Grid.Column="2" Grid.Row="3"
+                         Content="6"
+                         Style="{StaticResource Functional_BTN}" Click="SixButton_Click"/>
+            <RadioButton Grid.Column="3" Grid.Row="3"
+                         Content="-"
+                         Style="{StaticResource Functional_BTN}" Click="MinusButton_Click"/>
+            <RadioButton Grid.Column="0" Grid.Row="4"
+                         Content="1"
+                         Style="{StaticResource Functional_BTN}" Click="OneButton_Click"/>
+            <RadioButton Grid.Column="1" Grid.Row="4"
+                         Content="2"
+                         Style="{StaticResource Functional_BTN}" Click="TwoButton_Click"/>
+            <RadioButton Grid.Column="2" Grid.Row="4"
+                         Content="3"
+                         Style="{StaticResource Functional_BTN}" Click="ThreeButton_Click"/>
+            <RadioButton Grid.Column="3" Grid.Row="4"
+                         Content="+"
+                         Style="{StaticResource Functional_BTN}" Click="PlusButton_Click"/>
+            <RadioButton Grid.Column="0" Grid.Row="5"
+                         Content="/"
+                         Style="{StaticResource Functional_BTN}" Click="DivideButton_Click"/>
+            <RadioButton Grid.Column="1" Grid.Row="5"
+                         Content="0"
+                         Style="{StaticResource Functional_BTN}" Click="ZeroButton_Click"/>
+            <RadioButton Grid.Column="2" Grid.Row="5"
+                         Content=","
+                         Style="{StaticResource Functional_BTN}" Click="CommaButton_Click"/>
+            <RadioButton Grid.Column="3" Grid.Row="5"
+                         Content="="
+                         Style="{StaticResource Functional_BTN}" Click="EqualButton_Click"/>
+
+        </Grid>
+    </Border>
+</Window>

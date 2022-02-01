@@ -18,6 +18,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using ClosedXML.Excel;
 using DBAppCK.Model;
+using DBAppCK.View;
 using DBAppCK.ViewModel;
 using Microsoft.Win32;
 
@@ -35,6 +36,8 @@ namespace DBAppCK
     {
         private List<MainTable> loadedExcelFile = new List<MainTable>(); //Public variable that store list from external excel file
         private bool calendarVisibilityFlag = false;
+        private bool calculatorWindowFlag = false;
+        private CalculatorView calculatorWindow = new CalculatorView();
         private void showFinishedItemsOrAll()
         {
             MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities();
@@ -86,6 +89,7 @@ namespace DBAppCK
                 }
             }
         }
+
 
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -383,7 +387,7 @@ namespace DBAppCK
             var selectedItemInCombobox = (ComboBoxItem)searchList.SelectedValue; //Casting SearchList because content is too deep
 
             var selectedItem = ((TextBlock)selectedItemInCombobox.Content).Text; //Debugging window shows exact variable
-            
+
 
         }
 
@@ -605,9 +609,10 @@ namespace DBAppCK
 
 
 
-        private void RadioButton_Click(object sender, RoutedEventArgs e)
+        private void CalendarButton_Click(object sender, RoutedEventArgs e)
         {
             VisibilityCalendarViewModel calendarView = new VisibilityCalendarViewModel();
+
             if (calendarVisibilityFlag == false)
             {
                 calendarView.ShowCalendar = Visibility.Visible;
@@ -620,6 +625,43 @@ namespace DBAppCK
                 this.DataContext = calendarView;
                 calendarVisibilityFlag = false;
             }
+        }
+
+
+        private void CalculatorButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (systemCalculator.IsChecked == false)
+            {
+                System.Diagnostics.Process.Start("calc.exe");
+                calculatorWindow.Hide();
+                calculatorWindowFlag = false;
+            }
+            else if (systemCalculator.IsChecked == true)
+            {
+                if (calculatorWindowFlag == false)
+                {
+                    calculatorWindow.Show();
+                    calculatorWindowFlag = true;
+                }
+                else if (calculatorWindowFlag == true)
+                {
+                    calculatorWindow.Hide();
+                    calculatorWindowFlag = false;
+                }
+            }
+            
+
+        }
+
+        private void systemCalculator_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void NotesButton_Click(object sender, RoutedEventArgs e)
+        {
+            NotesView notesView = new NotesView();
+            notesView.Show();
         }
     }
 }

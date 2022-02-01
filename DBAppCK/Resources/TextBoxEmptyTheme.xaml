@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style TargetType="{x:Type TextBox}"
-           x:Key="TextBoxValues">        
+           x:Key="TextBoxEmptyValues">        
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
@@ -12,29 +12,16 @@
                                 Background="{TemplateBinding Background}" 
                                 SnapsToDevicePixels="True">
                             <Grid>
-                                <Rectangle StrokeThickness="1"/>
-                                <TextBlock x:Name="textDisplayed" 
-                                           Text="Type Here..." 
-                                           Visibility="Collapsed" 
-                                           FontSize="10"
-                                           Margin="5,0,0,0"
-                                           VerticalAlignment="Center"
-                                           HorizontalAlignment="Left"
-                                           Foreground="#FF9C9999"/>                                
+                                <Rectangle StrokeThickness="1"/>                                
                                 <ScrollViewer x:Name="PART_ContentHost"                                              
                                           Focusable="false"
                                           HorizontalScrollBarVisibility="Hidden"
                                           VerticalScrollBarVisibility="Hidden"/>
                             </Grid>
                         </Border>                        
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="Text" Value="">
-                                <Setter TargetName="textDisplayed" Property="Visibility" Value="Visible"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
-            </Setter>  
+            </Setter>
             <Setter Property="BorderBrush">
                 <Setter.Value>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
