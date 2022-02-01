@@ -1,17 +1,17 @@
-﻿<Window x:Class="DBAppCK.View.WPFDBAppCK"
+﻿<Window x:Class="ReSCat.View.ReSCatMainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"        
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         TextOptions.TextFormattingMode="Display"    
         TextOptions.TextRenderingMode="Auto" 
-        xmlns:local="clr-namespace:DBAppCK" xmlns:viewmodel="clr-namespace:DBAppCK.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:VisibilityCalendarViewModel}"
+        xmlns:local="clr-namespace:ReSCat" xmlns:viewmodel="clr-namespace:ReSCat.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:VisibilityCalendarViewModel}"
         mc:Ignorable="d"
-        Title="WPFDBAppCK" Height="680" Width="1300" FontFamily="Arial" 
+        Title="ReSCatMainWindow" Height="680" Width="1300" FontFamily="Arial" 
         WindowStyle="None"
         Background="Transparent"
         AllowsTransparency="True" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen"
-        
+        ResizeMode="CanResizeWithGrip"
         >
     
     
@@ -26,7 +26,7 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
-                <RowDefinition MinHeight="500" Height="auto" />
+                <RowDefinition MinHeight="500" Height="*" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
@@ -40,7 +40,7 @@
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="*" />
+                <!--<ColumnDefinition Width="*" />-->
             </Grid.ColumnDefinitions>
 
             <!--Top Panel-->
@@ -198,7 +198,7 @@
             </GridSplitter>
 
             <!--Middle Panel-->
-            <DataGrid Style="{DynamicResource DataGridStyle}" x:Name="MainDatabaseXAML" Grid.Column="1" Grid.Row="1"  
+            <DataGrid Style="{DynamicResource DataGridStyle}" x:Name="MainDatabaseXAML" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3"  
                       Margin="10" HorizontalAlignment="Stretch" 
                       SelectionChanged="MainDatabaseXAML_SelectionChanged" CanUserDeleteRows="False" 
                       CanUserAddRows="False" VerticalAlignment="Top" 
@@ -208,10 +208,9 @@
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Auto"
                       MaxHeight="480"
-                      >
-
+                      SnapsToDevicePixels="True" >                
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Unique Id" Binding="{Binding Id}"/>
+                    <DataGridTextColumn MinWidth="75" Width="auto" Header="Unique Id" Binding="{Binding Id}"/>
                     <DataGridTextColumn Header="Planned Week" Binding="{Binding Planned_Week}"/>
                     <DataGridTextColumn Header="Actual Week" Binding="{Binding Actual_Week}"/>
                     <DataGridTextColumn Header="Weight" Binding="{Binding Weight}"/>
@@ -233,7 +232,7 @@
 
 
             <!--Bottom Panel-->
-            <StackPanel Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="4" Orientation="Horizontal">
+            <StackPanel Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal">
                 <Label Content="Enter Planned Week" Margin="3,0,3,3" HorizontalContentAlignment="Center" Width="125" BorderThickness="1" Foreground="White" FontStretch="Normal">
                     <Label.BorderBrush>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -293,7 +292,7 @@
 
             </StackPanel>
 
-            <StackPanel Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="4" VerticalAlignment="Stretch" Orientation="Horizontal">
+            <StackPanel Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Stretch" Orientation="Horizontal">
                 <TextBox  TextWrapping="Wrap" x:Name="TextElementPlannedWeek" MinWidth="100" 
                       Width="125" HorizontalAlignment="Left" Margin="3,0,3,3"
                       BorderThickness="1" Foreground="White"
@@ -327,7 +326,7 @@
             </StackPanel>
 
 
-            <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Center">
+            <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.ColumnSpan="3" Grid.Column="1" HorizontalAlignment="Center">
                 <RadioButton Content="Add New Element" x:Name="AddElementToGrid" 
                              Margin="10,5,10,5" Height="25" Width="120"
                              Foreground="White"

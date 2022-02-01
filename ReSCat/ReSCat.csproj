@@ -7,8 +7,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{8DB359F1-E128-4F27-9490-446D5121DF9C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>DBAppCK</RootNamespace>
-    <AssemblyName>DBAppCK</AssemblyName>
+    <RootNamespace>ReSCat</RootNamespace>
+    <AssemblyName>ReSCat</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -144,8 +144,8 @@
     <Compile Include="View\NotesView.xaml.cs">
       <DependentUpon>NotesView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\WPFDBAppCK.xaml.cs">
-      <DependentUpon>WPFDBAppCK.xaml</DependentUpon>
+    <Compile Include="View\ReSCatMainWindow.xaml.cs">
+      <DependentUpon>ReSCatMainWindow.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -245,6 +245,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\TestTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\TextBoxEmptyTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -261,7 +265,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\WPFDBAppCK.xaml">
+    <Page Include="View\ReSCatMainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

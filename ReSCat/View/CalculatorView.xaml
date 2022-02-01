@@ -1,9 +1,9 @@
-﻿<Window x:Class="DBAppCK.View.CalculatorView"
+﻿<Window x:Class="ReSCat.View.CalculatorView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DBAppCK.View"
+        xmlns:local="clr-namespace:ReSCat.View"
         mc:Ignorable="d"
         Title="CalculatorView" Height="250" Width="250"
         WindowStyle="None"
@@ -38,7 +38,7 @@
                      x:Name="Display" FontSize="30" TextWrapping="Wrap"
                      Style="{DynamicResource TextBoxEmptyValues}"                     
                      VerticalContentAlignment="Center"
-                     HorizontalContentAlignment="Center">
+                     HorizontalContentAlignment="Left">
                 
             </TextBox>
             <RadioButton Grid.Column="3" Grid.Row="1"

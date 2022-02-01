@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DBAppCK.Model
+namespace ReSCat.Model
 {
     public class CalendarWeekModel
     {

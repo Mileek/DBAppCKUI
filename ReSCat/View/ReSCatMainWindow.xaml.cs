@@ -17,22 +17,22 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using ClosedXML.Excel;
-using DBAppCK.Model;
-using DBAppCK.View;
-using DBAppCK.ViewModel;
+using ReSCat.Model;
+using ReSCat.View;
+using ReSCat.ViewModel;
 using Microsoft.Win32;
 
-namespace DBAppCK.View
+namespace ReSCat.View
 {
     /// <summary>
-    /// Logika interakcji dla klasy WPFDBAppCK.xaml
+    /// Logika interakcji dla klasy ReSCatMainWindow.xaml
     /// </summary>
 
     //
     //Unique ID don't need to be "Recycled" and the amount of unique records is so big that it is not necessary (to delete it).
     //
 
-    public partial class WPFDBAppCK : Window
+    public partial class ReSCatMainWindow : Window
     {
         private List<MainTable> loadedExcelFile = new List<MainTable>(); //Public variable that store list from external excel file
         private bool calendarVisibilityFlag = false;
@@ -98,7 +98,7 @@ namespace DBAppCK.View
         }
 
 
-        public WPFDBAppCK()
+        public ReSCatMainWindow()
         {
             InitializeComponent();
 
@@ -283,7 +283,7 @@ namespace DBAppCK.View
                         mainTableUpdate.Quantity = Convert.ToInt32(TextElementQuantity.Text);
 
                         //newSourceFile values are replaced by mainTableUpdate that is string replaced elements
-                        //(new System.Collections.Generic.Mscorlib_CollectionDebugView<DBAppCK.MainTable>(newSourceFile).Items[0]).Client_Name <- !!Debugging!!
+                        //(new System.Collections.Generic.Mscorlib_CollectionDebugView<ReSCat.MainTable>(newSourceFile).Items[0]).Client_Name <- !!Debugging!!
                         loadedExcelFile[MainDatabaseXAML.SelectedIndex].Planned_Week = mainTableUpdate.Planned_Week;
                         loadedExcelFile[MainDatabaseXAML.SelectedIndex].Actual_Week = mainTableUpdate.Actual_Week;
                         loadedExcelFile[MainDatabaseXAML.SelectedIndex].Weight = mainTableUpdate.Weight;

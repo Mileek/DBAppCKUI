@@ -9,6 +9,9 @@
         <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
         <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
 
+        
+        
+        
         <Setter Property="RowStyle">
             <Setter.Value>
                 <Style TargetType="DataGridRow">
@@ -27,7 +30,6 @@
         </Setter>
 
         <Setter Property="ColumnHeaderStyle">
-
             <Setter.Value>
                 <Style TargetType="DataGridColumnHeader">
                     <Setter Property="Height" Value="24"/>
@@ -45,14 +47,33 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="DataGridColumnHeader">
-                                <Border Padding="{TemplateBinding Padding}" 
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                        Background="{TemplateBinding Background}"
-                                        Height="{TemplateBinding Height}">
-                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" 
-                                                      VerticalAlignment="{TemplateBinding VerticalAlignment}"/>
-                                </Border>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Padding="{TemplateBinding Padding}" 
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            Background="{TemplateBinding Background}"
+                                            Height="{TemplateBinding Height}"
+                                            Width="{TemplateBinding Width}"
+                                            MinWidth="{TemplateBinding MinWidth}"
+                                            Grid.Column="0"
+                                            >
+                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" 
+                                                          VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+
+                                    </Border>
+
+                                    <Thumb x:Name="PART_RightHeaderGripper" Grid.Column="1" 
+                                           HorizontalAlignment="Right"                                           
+                                           Width="2" BorderThickness="1"
+                                           BorderBrush="Transparent"
+                                           Cursor="SizeWE">
+                                    </Thumb>
+                                </Grid>
                             </ControlTemplate>
 
                         </Setter.Value>
@@ -90,7 +111,7 @@
                     <Setter Property="BorderBrush" Value="Black"/>
                     <Setter Property="BorderThickness" Value="1"/>
                     <Setter Property="Background" Value="#FF342244"/>
-                    
+
                     <Setter Property="TextBlock.TextAlignment" Value="Center"/>
 
 
@@ -117,8 +138,6 @@
                 </Style>
             </Setter.Value>
         </Setter>
-
-
-
     </Style>
+    
 </ResourceDictionary>
