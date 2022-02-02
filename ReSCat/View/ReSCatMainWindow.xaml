@@ -7,7 +7,7 @@
         TextOptions.TextRenderingMode="Auto" 
         xmlns:local="clr-namespace:ReSCat" xmlns:viewmodel="clr-namespace:ReSCat.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:VisibilityCalendarViewModel}"
         mc:Ignorable="d"
-        Title="ReSCatMainWindow" Height="680" Width="1300" FontFamily="Arial" 
+        Title="ReSCatMainWindow" Height="680" Width="1320" FontFamily="Arial" 
         WindowStyle="None"
         Background="Transparent"
         AllowsTransparency="True" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen"
@@ -87,7 +87,7 @@
                 </Border.BorderBrush>
                 <StackPanel >
                     <Label Margin="10" HorizontalAlignment="Center" Foreground="White" >Search by:</Label>
-                    <ComboBox Style="{DynamicResource ComboBoxList}" Margin="5" x:Name="searchList" SelectionChanged="searchList_SelectionChanged" 
+                    <ComboBox Style="{DynamicResource ComboBoxList}" Margin="5" x:Name="searchList" SelectionChanged="SearchList_SelectionChanged" 
                               IsTextSearchCaseSensitive="True"
                               >
                         <ComboBox.BorderBrush>
@@ -369,7 +369,7 @@
                              Foreground="White"
                              Style="{StaticResource Functional_BTN}"
                              Click="Clear_Click"/>
-                <ComboBox Style="{DynamicResource ComboBoxList}" Margin="5" x:Name="hallList" SelectionChanged="hallhList_SelectionChanged" 
+                <ComboBox Style="{DynamicResource ComboBoxList}" Margin="5" x:Name="hallList" SelectionChanged="HallList_SelectionChanged" 
                               IsTextSearchCaseSensitive="True" SelectedIndex="0"
                               >
                     <ComboBox.BorderBrush>
@@ -448,7 +448,7 @@
                      HorizontalAlignment="Left" >
                 <Calendar Grid.IsSharedSizeScope="True" Language="en-us"
                       Name="weekCalendar"
-                      FirstDayOfWeek="Monday" MouseDoubleClick="weekCalendar_MouseDoubleClick" 
+                      FirstDayOfWeek="Monday" MouseDoubleClick="WeekCalendar_MouseDoubleClick" 
                       Visibility="{Binding ShowCalendar}"
                       BorderThickness="2"    
                       Background="LightGray"    

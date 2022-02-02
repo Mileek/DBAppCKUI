@@ -40,11 +40,11 @@ namespace ReSCat.View
         private bool calendarVisibilityFlag = false;
         private bool calculatorWindowFlag = false;
         private bool notesWindowFlag = false;
-        private CalculatorView calculatorWindow = new CalculatorView();
-        private NotesView notesWindow = new NotesView();
+        private readonly CalculatorView calculatorWindow = new CalculatorView();
+        private readonly NotesView notesWindow = new NotesView();
 
         //Methods
-        private void showFinishedItemsOrAll()
+        private void ShowFinishedItemsOrAll()
         {
             MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities();
             if (loadedExcelFile.Count == 0)
@@ -95,7 +95,7 @@ namespace ReSCat.View
                 }
             }
         }
-        private XLWorkbook saveAsExcel(XLWorkbook workbook) // Function also had cell/row manipulation
+        private XLWorkbook SaveAsExcel(XLWorkbook workbook) // Function also had cell/row manipulation
         {
             MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities();
 
@@ -122,7 +122,7 @@ namespace ReSCat.View
 
             return workbook;
         }
-        private XLWorkbook saveAsEditedExcel(XLWorkbook workbook)
+        private XLWorkbook SaveAsEditedExcel(XLWorkbook workbook)
         {
             MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities();
 
@@ -147,7 +147,8 @@ namespace ReSCat.View
             return workbook;
         }
 
-        private MainTable addItemToDataBase()
+
+        private MainTable AddItemToDataBase()
         {
             MainTable mainTableAdd = new MainTable()
             {
@@ -163,9 +164,7 @@ namespace ReSCat.View
             };
             return mainTableAdd;
         }
-
-
-        private void clearTextNotValue()
+        private void ClearTextNotValue()
         {
             TextElementPlannedWeek.Text = string.Empty;
             TextElementActualWeek.Text = string.Empty;
@@ -173,7 +172,7 @@ namespace ReSCat.View
             TextElementQuantity.Text = string.Empty;
         }
 
-        private void emptyAllTextBoxes()
+        private void EmptyAllTextBoxes()
         {
             TextElementPlannedWeek.Text = string.Empty;
             TextElementActualWeek.Text = string.Empty;
@@ -184,7 +183,7 @@ namespace ReSCat.View
             TextElementQuantity.Text = string.Empty;
         }
 
-        private MainTable updateRecordInDataBase(MainTable mainTableUpdate)
+        private MainTable UpdateRecordInDataBase(MainTable mainTableUpdate)
         {
 
 
@@ -200,7 +199,7 @@ namespace ReSCat.View
             return mainTableUpdate;
         }
 
-        private MainTable displaySelectedInTextBoxes(MainTable mainTableDisplayRowAt)
+        private MainTable DisplaySelectedInTextBoxes(MainTable mainTableDisplayRowAt)
         {
             TextElementPlannedWeek.Text = Convert.ToString(mainTableDisplayRowAt.Planned_Week);
             TextElementActualWeek.Text = Convert.ToString(mainTableDisplayRowAt.Actual_Week);
@@ -211,7 +210,46 @@ namespace ReSCat.View
             TextElementQuantity.Text = Convert.ToString(mainTableDisplayRowAt.Quantity);
             return mainTableDisplayRowAt;
         }
+        private XLWorkbook OpenFile(XLWorkbook workbook)
+        {
+            MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities();
+            List<MainTable> openList = new List<MainTable>();
 
+
+            var worksheetOpen = workbook.Worksheet(1); //Use 1 sheet in chosen pathfile
+
+            int rowStart = 3; //Skip header and names
+            int columnStart = 1;
+
+
+            //this works only for small tables ~1000 rows, because its speed
+            mainScreenEntity.MainTables.RemoveRange(mainScreenEntity.MainTables);
+
+            mainScreenEntity.SaveChanges();
+
+
+            while (string.IsNullOrWhiteSpace(worksheetOpen.Cell(rowStart, columnStart).Value?.ToString()) == false) // Is thre data in row? ID number
+            {
+                MainTable tableOpen = new MainTable()
+                {
+
+                    Id = int.Parse(worksheetOpen.Cell(rowStart, columnStart).Value.ToString()), // change value from double to string, and then to int
+                    Planned_Week = int.Parse(worksheetOpen.Cell(rowStart, columnStart + 1).Value.ToString()),
+                    Actual_Week = int.Parse(worksheetOpen.Cell(rowStart, columnStart + 2).Value.ToString()),
+                    Weight = double.Parse(worksheetOpen.Cell(rowStart, columnStart + 3).Value.ToString()),
+                    Order = worksheetOpen.Cell(rowStart, columnStart + 4).Value.ToString(),
+                    Client_Name = worksheetOpen.Cell(rowStart, columnStart + 5).Value.ToString(),
+                    Name = worksheetOpen.Cell(rowStart, columnStart + 6).Value.ToString(),
+                    Hall = worksheetOpen.Cell(rowStart, columnStart + 7).Value.ToString(),
+                    Quantity = int.Parse(worksheetOpen.Cell(rowStart, columnStart + 8).Value.ToString())
+                };
+
+                mainScreenEntity.MainTables.Add(tableOpen);
+                mainScreenEntity.SaveChanges();
+                rowStart++;
+            }
+            return workbook;
+        }
 
 
         //Controls
@@ -237,7 +275,7 @@ namespace ReSCat.View
             {
                 if (loadedExcelFile.Count == 0)
                 {
-                    showFinishedItemsOrAll();
+                    ShowFinishedItemsOrAll();
                 }
                 else
                 {
@@ -250,7 +288,7 @@ namespace ReSCat.View
                     {
                         loadedExcelFile.Clear(); //Clearing whole variable(List)
 
-                        showFinishedItemsOrAll();
+                        ShowFinishedItemsOrAll();
                     }
                 }
             }
@@ -275,7 +313,7 @@ namespace ReSCat.View
                 || Convert.ToDouble(TextElementWeight.Text) <= 0
                 || Convert.ToInt32(TextElementQuantity.Text) <= 0)
                 {
-                    clearTextNotValue();
+                    ClearTextNotValue();
                     MessageBox.Show("Planned week, Actual Week, Weight and Quantity can not be negative!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
@@ -283,12 +321,12 @@ namespace ReSCat.View
                 {
                     if (loadedExcelFile.Count == 0) //Dependency wheter open was clicked or not
                     {
-                        mainScreenEntity.MainTables.Add(addItemToDataBase());
+                        mainScreenEntity.MainTables.Add(AddItemToDataBase());
                         mainScreenEntity.SaveChanges();
                     }
                     else
                     {
-                        loadedExcelFile.Add(addItemToDataBase());
+                        loadedExcelFile.Add(AddItemToDataBase());
                     }
 
                     //Displaying
@@ -296,7 +334,7 @@ namespace ReSCat.View
                     {
                         //Work on base database in entity
 
-                        showFinishedItemsOrAll();
+                        ShowFinishedItemsOrAll();
                     }
                     else
                     {
@@ -321,7 +359,7 @@ namespace ReSCat.View
                     mainScreenEntity.SaveChanges();
 
                     //Displaying                    
-                    showFinishedItemsOrAll();
+                    ShowFinishedItemsOrAll();
                 }
                 else
                 {
@@ -346,21 +384,21 @@ namespace ReSCat.View
 
                         mainScreenEntity.MainTables.Attach(mainTableUpdate);
 
-                        updateRecordInDataBase(mainTableUpdate);
+                        UpdateRecordInDataBase(mainTableUpdate);
 
                         mainScreenEntity.SaveChanges();
 
-                        emptyAllTextBoxes();
+                        EmptyAllTextBoxes();
 
                         //Displaying
-                        showFinishedItemsOrAll();
+                        ShowFinishedItemsOrAll();
 
                         mainScreenEntity.Dispose();
                     }
                     else
                     {
                         //mainTableUpdate is storing items that are replaced
-                        updateRecordInDataBase(mainTableUpdate);
+                        UpdateRecordInDataBase(mainTableUpdate);
 
                         //newSourceFile values are replaced by mainTableUpdate that is string replaced elements
                         //(new System.Collections.Generic.Mscorlib_CollectionDebugView<ReSCat.MainTable>(newSourceFile).Items[0]).Client_Name <- !!Debugging!!
@@ -374,7 +412,7 @@ namespace ReSCat.View
                         loadedExcelFile[MainDatabaseXAML.SelectedIndex].Quantity = mainTableUpdate.Quantity;
 
                         //Clearing text boxes
-                        emptyAllTextBoxes();
+                        EmptyAllTextBoxes();
 
                         //Displaying source and refreshing so that values are visable
                         MainDatabaseXAML.ItemsSource = loadedExcelFile;
@@ -397,7 +435,7 @@ namespace ReSCat.View
                 {
                     mainScreenEntity.MainTables.Attach(mainTableDisplayRowAt);
 
-                    displaySelectedInTextBoxes(mainTableDisplayRowAt);
+                    DisplaySelectedInTextBoxes(mainTableDisplayRowAt);
                 }
             }
         }
@@ -441,7 +479,7 @@ namespace ReSCat.View
             }
         }
 
-        private void searchList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void SearchList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
 
@@ -473,21 +511,23 @@ namespace ReSCat.View
             {
                 if (!File.Exists(fileNamePath)) //File does not exist, was deleted renamed etc
                 {
-                    SaveFileDialog saveFileDialog = new SaveFileDialog();
-                    saveFileDialog.Filter = "Excel|*.xlsx";
+                    SaveFileDialog saveFileDialog = new SaveFileDialog
+                    {
+                        Filter = "Excel|*.xlsx"
+                    };
                     saveFileDialog.ShowDialog(); //Display File dialog with possible file format (Excel only)
                     try
                     {
 
                         if (loadedExcelFile.Count == 0)
                         {
-                            saveAsExcel(workbook).SaveAs(saveFileDialog.FileName);
+                            SaveAsExcel(workbook).SaveAs(saveFileDialog.FileName);
 
                             fileNamePath = saveFileDialog.FileName; //Get file name path to variable
                         }
                         else
                         {
-                            saveAsEditedExcel(workbook).SaveAs(saveFileDialog.FileName);
+                            SaveAsEditedExcel(workbook).SaveAs(saveFileDialog.FileName);
 
                             fileNamePath = saveFileDialog.FileName; //Get file name path to variable
                         }
@@ -501,7 +541,7 @@ namespace ReSCat.View
                 }
                 else if (File.Exists(fileNamePath))
                 {
-                    saveAsExcel(workbook).SaveAs(fileNamePath);
+                    SaveAsExcel(workbook).SaveAs(fileNamePath);
                 }
                 else
                 {
@@ -519,8 +559,10 @@ namespace ReSCat.View
             //Still async implementation needed
             //
 
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Excel|*.xlsx";
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Excel|*.xlsx"
+            };
             saveFileDialog.ShowDialog(); //Display File dialog with possible file format (Excel only)
             try
             {
@@ -528,13 +570,13 @@ namespace ReSCat.View
                 {
                     if (loadedExcelFile.Count == 0)
                     {
-                        saveAsExcel(workbook).SaveAs(saveFileDialog.FileName);
+                        SaveAsExcel(workbook).SaveAs(saveFileDialog.FileName);
 
                         fileNamePath = saveFileDialog.FileName; //Get file name path to variable
                     }
                     else
                     {
-                        saveAsEditedExcel(workbook).SaveAs(saveFileDialog.FileName);
+                        SaveAsEditedExcel(workbook).SaveAs(saveFileDialog.FileName);
 
                         fileNamePath = saveFileDialog.FileName; //Get file name path to variable
                     }
@@ -548,8 +590,10 @@ namespace ReSCat.View
 
         private void Edit_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Excel|*.xlsx";
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Excel|*.xlsx"
+            };
             openFileDialog.ShowDialog();
             try
             {
@@ -568,17 +612,18 @@ namespace ReSCat.View
 
                     while (string.IsNullOrWhiteSpace(worksheetOpen.Cell(rowStart, columnStart).Value?.ToString()) == false) // Is thre data in row? ID number
                     {
-                        MainTable tableOpen = new MainTable();
-
-                        tableOpen.Id = int.Parse(worksheetOpen.Cell(rowStart, columnStart).Value.ToString()); // change value from double to string, and then to int
-                        tableOpen.Planned_Week = int.Parse(worksheetOpen.Cell(rowStart, columnStart + 1).Value.ToString());
-                        tableOpen.Actual_Week = int.Parse(worksheetOpen.Cell(rowStart, columnStart + 2).Value.ToString());
-                        tableOpen.Weight = double.Parse(worksheetOpen.Cell(rowStart, columnStart + 3).Value.ToString());
-                        tableOpen.Order = worksheetOpen.Cell(rowStart, columnStart + 4).Value.ToString();
-                        tableOpen.Client_Name = worksheetOpen.Cell(rowStart, columnStart + 5).Value.ToString();
-                        tableOpen.Name = worksheetOpen.Cell(rowStart, columnStart + 6).Value.ToString();
-                        tableOpen.Hall = worksheetOpen.Cell(rowStart, columnStart + 7).Value.ToString();
-                        tableOpen.Quantity = int.Parse(worksheetOpen.Cell(rowStart, columnStart + 8).Value.ToString());
+                        MainTable tableOpen = new MainTable
+                        {
+                            Id = int.Parse(worksheetOpen.Cell(rowStart, columnStart).Value.ToString()), // change value from double to string, and then to int
+                            Planned_Week = int.Parse(worksheetOpen.Cell(rowStart, columnStart + 1).Value.ToString()),
+                            Actual_Week = int.Parse(worksheetOpen.Cell(rowStart, columnStart + 2).Value.ToString()),
+                            Weight = double.Parse(worksheetOpen.Cell(rowStart, columnStart + 3).Value.ToString()),
+                            Order = worksheetOpen.Cell(rowStart, columnStart + 4).Value.ToString(),
+                            Client_Name = worksheetOpen.Cell(rowStart, columnStart + 5).Value.ToString(),
+                            Name = worksheetOpen.Cell(rowStart, columnStart + 6).Value.ToString(),
+                            Hall = worksheetOpen.Cell(rowStart, columnStart + 7).Value.ToString(),
+                            Quantity = int.Parse(worksheetOpen.Cell(rowStart, columnStart + 8).Value.ToString())
+                        };
 
                         openList.Add(tableOpen);
                         rowStart++;
@@ -625,7 +670,7 @@ namespace ReSCat.View
                 mainScreenEntity.SaveChanges();
 
                 //Displaying                
-                showFinishedItemsOrAll();
+                ShowFinishedItemsOrAll();
 
                 mainScreenEntity.Dispose();
             }
@@ -635,7 +680,7 @@ namespace ReSCat.View
 
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
-            emptyAllTextBoxes();
+            EmptyAllTextBoxes();
         }
 
         private void DragnMove(object sender, MouseButtonEventArgs e)
@@ -647,11 +692,11 @@ namespace ReSCat.View
 
         private void FinishedOnly_Click(object sender, RoutedEventArgs e)
         {
-            showFinishedItemsOrAll();
+            ShowFinishedItemsOrAll();
         }
 
 
-        private void weekCalendar_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void WeekCalendar_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             CalendarWeekModel selectedWeek = new CalendarWeekModel();
             var clickedDate = (DateTime)weekCalendar.SelectedDate;
@@ -724,7 +769,7 @@ namespace ReSCat.View
             }
         }
 
-        private void hallhList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void HallList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }
@@ -734,46 +779,7 @@ namespace ReSCat.View
             MainWindow.Content = new ChartMenuView();
         }
 
-        private XLWorkbook openFile(XLWorkbook workbook)
-        {
-            MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities();
-            List<MainTable> openList = new List<MainTable>();
 
-
-            var worksheetOpen = workbook.Worksheet(1); //Use 1 sheet in chosen pathfile
-
-            int rowStart = 3; //Skip header and names
-            int columnStart = 1;
-
-
-            //this works only for small tables ~1000 rows, because its speed
-            mainScreenEntity.MainTables.RemoveRange(mainScreenEntity.MainTables);
-
-            mainScreenEntity.SaveChanges();
-
-
-            while (string.IsNullOrWhiteSpace(worksheetOpen.Cell(rowStart, columnStart).Value?.ToString()) == false) // Is thre data in row? ID number
-            {
-                MainTable tableOpen = new MainTable()
-                {
-
-                    Id = int.Parse(worksheetOpen.Cell(rowStart, columnStart).Value.ToString()), // change value from double to string, and then to int
-                    Planned_Week = int.Parse(worksheetOpen.Cell(rowStart, columnStart + 1).Value.ToString()),
-                    Actual_Week = int.Parse(worksheetOpen.Cell(rowStart, columnStart + 2).Value.ToString()),
-                    Weight = double.Parse(worksheetOpen.Cell(rowStart, columnStart + 3).Value.ToString()),
-                    Order = worksheetOpen.Cell(rowStart, columnStart + 4).Value.ToString(),
-                    Client_Name = worksheetOpen.Cell(rowStart, columnStart + 5).Value.ToString(),
-                    Name = worksheetOpen.Cell(rowStart, columnStart + 6).Value.ToString(),
-                    Hall = worksheetOpen.Cell(rowStart, columnStart + 7).Value.ToString(),
-                    Quantity = int.Parse(worksheetOpen.Cell(rowStart, columnStart + 8).Value.ToString())
-                };
-
-                mainScreenEntity.MainTables.Add(tableOpen);
-                mainScreenEntity.SaveChanges();
-                rowStart++;
-            }
-            return workbook;
-        }
         private void Open_Click(object sender, RoutedEventArgs e)
         {
             var result = MessageBox.Show("Do you want to overwrite main table?, " +
@@ -787,17 +793,19 @@ namespace ReSCat.View
             }
             else
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "Excel|*.xlsx";
+                OpenFileDialog openFileDialog = new OpenFileDialog
+                {
+                    Filter = "Excel|*.xlsx"
+                };
                 openFileDialog.ShowDialog();
                 try
                 {
                     using (XLWorkbook workbook = new XLWorkbook(openFileDialog.FileName))
                     {
 
-                        openFile(workbook);
+                        OpenFile(workbook);
 
-                        showFinishedItemsOrAll();
+                        ShowFinishedItemsOrAll();
                     }
                 }
                 catch (Exception ex)
@@ -819,8 +827,10 @@ namespace ReSCat.View
             }
             else
             {
-                SaveFileDialog saveFileDialog = new SaveFileDialog();
-                saveFileDialog.Filter = "Excel|*.xlsx";
+                SaveFileDialog saveFileDialog = new SaveFileDialog
+                {
+                    Filter = "Excel|*.xlsx"
+                };
                 saveFileDialog.ShowDialog(); //Display File dialog with possible file format (Excel only)
                 try
                 {
@@ -832,11 +842,11 @@ namespace ReSCat.View
 
                         mainScreenEntity.SaveChanges();
 
-                        saveAsExcel(workbook).SaveAs(saveFileDialog.FileName);
+                        SaveAsExcel(workbook).SaveAs(saveFileDialog.FileName);
 
                         fileNamePath = saveFileDialog.FileName; //Get file name path to variable
 
-                        openFile(workbook);
+                        OpenFile(workbook);
 
                     }
                 }
