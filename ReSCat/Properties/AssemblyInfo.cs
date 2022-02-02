@@ -8,10 +8,10 @@ using System.Windows;
 // zestaw atrybutów. Zmień wartości tych atrybutów, aby zmodyfikować informacje
 // powiązane z zestawem.
 [assembly: AssemblyTitle("ReSCat")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Simple application for creating reports.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ReSCat")]
+[assembly: AssemblyCompany("Kamil Kaszuba")]
+[assembly: AssemblyProduct("Report SQL Catalyst")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -22,8 +22,9 @@
                 <GradientStop Color="DarkRed" Offset="1"/>
             </LinearGradientBrush>
         </Border.BorderBrush>
+        
         <!--Columna and row definitions-->
-        <Grid>
+        <Grid>            
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition MinHeight="500" Height="*" />
@@ -43,6 +44,8 @@
                 <!--<ColumnDefinition Width="*" />-->
             </Grid.ColumnDefinitions>
 
+            <Frame x:Name="MainWindow" Grid.RowSpan="7" Grid.ColumnSpan="4" Grid.Column="1" Grid.Row="1" NavigationUIVisibility="Hidden"/>
+            
             <!--Top Panel-->
             <Label Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Content="User:"/>
 
@@ -51,7 +54,9 @@
                     <Menu Style="{DynamicResource MainMenu}" Height="Auto" DockPanel.Dock="Top" Width="Auto">
                         <!--For now it could stay, but there are many things to change here-->
                         <MenuItem Header="File">
+                            <MenuItem Header="New" Click="New_Click"/>
                             <MenuItem Header="Open" Click="Open_Click"/>
+                            <MenuItem Header="Edit" Click="Edit_Click"/>
                             <MenuItem Header="Save" Click="Save_Click"/>
                             <MenuItem Header="Save As" Click="SaveAs_Click"/>
                             <Separator/>
@@ -59,14 +64,14 @@
                         </MenuItem>
                         <MenuItem Header="Edit">
                             <MenuItem Header="Cut"/>
-                            <MenuItem Header="Copy"/>
+                            <MenuItem Header="Copy" />
                             <MenuItem Header="Paste"/>
                         </MenuItem>
                         <MenuItem Header="Tools">
                             <MenuItem Header="Log Out"/>
                             <MenuItem Header="Copy"/>
                             <MenuItem Header="Is Finished?" x:Name="FinishedOnly" IsCheckable="True" IsChecked="False" Click="FinishedOnly_Click" />
-                            <MenuItem Header="Build-In Calculator" x:Name="systemCalculator" IsCheckable="True" IsChecked="False" Click="systemCalculator_Click" />
+                            <MenuItem Header="Build-In Calculator" x:Name="systemCalculator" IsCheckable="True" IsChecked="False" />
                         </MenuItem>
                     </Menu>
                 </DockPanel>
@@ -160,6 +165,16 @@
                                     <GradientStop Color="DarkRed" Offset="1"/>
                                 </LinearGradientBrush>
                             </ComboBoxItem.BorderBrush>
+
+                            <TextBlock FontWeight="SemiBold" Foreground="White">Hall</TextBlock>
+                        </ComboBoxItem>
+                        <ComboBoxItem Background="#FF446A8C">
+                            <ComboBoxItem.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#F51D4C"/>
+                                    <GradientStop Color="DarkRed" Offset="1"/>
+                                </LinearGradientBrush>
+                            </ComboBoxItem.BorderBrush>
                             
                             <TextBlock FontWeight="SemiBold" Foreground="White">Quantity</TextBlock>
                         </ComboBoxItem>
@@ -172,13 +187,14 @@
                              Style="{StaticResource Search_BTN}"
                              Click="Search_Click"/>
                     <RadioButton Height="35"  Margin="0,5,0,5"
-                             FontSize="16" Foreground="White" Content="Menu 1"
+                             FontSize="16" Foreground="White" Content="DataBase"
                              Style="{StaticResource Highlight_BTN}"/>
                     <RadioButton Height="35" Margin="0,5,0,5"
-                             FontSize="16" Foreground="White" Content="Menu 2"
-                             Style="{StaticResource Highlight_BTN}"/>
+                             FontSize="16" Foreground="White" Content="Charts"
+                             Style="{StaticResource Highlight_BTN}" Click="ChartMenu_Click"
+                                 />
                     <RadioButton Height="35" Margin="0,5,0,5"
-                             FontSize="16" Foreground="White" Content="Menu 3"
+                             FontSize="16" Foreground="White" Content="Logs"
                              Style="{StaticResource Highlight_BTN}"/>
                 </StackPanel>
             </Border>
@@ -210,13 +226,14 @@
                       MaxHeight="480"
                       SnapsToDevicePixels="True" >                
                 <DataGrid.Columns>
-                    <DataGridTextColumn MinWidth="75" Width="auto" Header="Unique Id" Binding="{Binding Id}"/>
+                    <DataGridTextColumn Visibility="Hidden" Header="Unique Id" Binding="{Binding Id}"/>
                     <DataGridTextColumn Header="Planned Week" Binding="{Binding Planned_Week}"/>
                     <DataGridTextColumn Header="Actual Week" Binding="{Binding Actual_Week}"/>
                     <DataGridTextColumn Header="Weight" Binding="{Binding Weight}"/>
                     <DataGridTextColumn Header="Order" Binding="{Binding Order}"/>
                     <DataGridTextColumn Header="Client Name" Binding="{Binding Client_Name}"/>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Header="Element Name" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Header="Hall" Binding="{Binding Hall}"/>
                     <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}"/>
                     <DataGridTemplateColumn Header="IsFinished?">
                         <DataGridTemplateColumn.CellTemplate>
@@ -352,7 +369,66 @@
                              Foreground="White"
                              Style="{StaticResource Functional_BTN}"
                              Click="Clear_Click"/>
-                <Button Content="Test Function" x:Name="Test" Background="LightSkyBlue" Click="Test_Click"/>
+                <ComboBox Style="{DynamicResource ComboBoxList}" Margin="5" x:Name="hallList" SelectionChanged="hallhList_SelectionChanged" 
+                              IsTextSearchCaseSensitive="True" SelectedIndex="0"
+                              >
+                    <ComboBox.BorderBrush>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#F51D4C"/>
+                            <GradientStop Color="DarkRed" Offset="1"/>
+                        </LinearGradientBrush>
+                    </ComboBox.BorderBrush>
+
+
+                    <ComboBoxItem Background="#FF446A8C">
+                        <ComboBoxItem.BorderBrush>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#F51D4C"/>
+                                <GradientStop Color="DarkRed" Offset="1"/>
+                            </LinearGradientBrush>
+                        </ComboBoxItem.BorderBrush>
+
+                        <TextBlock x:Name="HallA" FontWeight="SemiBold" Foreground="White">Hall A</TextBlock>
+                    </ComboBoxItem>
+                    <ComboBoxItem Background="#FF446A8C">
+                        <ComboBoxItem.BorderBrush>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#F51D4C"/>
+                                <GradientStop Color="DarkRed" Offset="1"/>
+                            </LinearGradientBrush>
+                        </ComboBoxItem.BorderBrush>
+
+                        <TextBlock FontWeight="SemiBold" Foreground="White">Hall B</TextBlock>
+                    </ComboBoxItem>
+                    <ComboBoxItem Background="#FF446A8C">
+                        <ComboBoxItem.BorderBrush>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#F51D4C"/>
+                                <GradientStop Color="DarkRed" Offset="1"/>
+                            </LinearGradientBrush>
+                        </ComboBoxItem.BorderBrush>
+
+                        <TextBlock FontWeight="SemiBold" Foreground="White">Hall C</TextBlock>
+                    </ComboBoxItem>
+                    <ComboBoxItem Background="#FF446A8C">
+                        <ComboBoxItem.BorderBrush>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#F51D4C"/>
+                                <GradientStop Color="DarkRed" Offset="1"/>
+                            </LinearGradientBrush>
+                        </ComboBoxItem.BorderBrush>
+
+                        <TextBlock FontWeight="SemiBold" Foreground="White">Hall D</TextBlock>
+                    </ComboBoxItem>
+                    <ComboBoxItem Background="#FF446A8C">
+                        <ComboBoxItem.BorderBrush>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#F51D4C"/>
+                                <GradientStop Color="DarkRed" Offset="1"/>
+                            </LinearGradientBrush>
+                        </ComboBoxItem.BorderBrush>
+                    </ComboBoxItem>
+                </ComboBox>
             </StackPanel>
             
             <!--Right Panel-->

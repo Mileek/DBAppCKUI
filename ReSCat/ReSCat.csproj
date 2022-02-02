@@ -137,9 +137,13 @@
     </Compile>
     <Compile Include="Model\CalendarWeekModel.cs" />
     <Compile Include="Model\SearchModel.cs" />
+    <Compile Include="ViewModel\DataBaseViewModel.cs" />
     <Compile Include="ViewModel\VisibilityCalendarViewModel.cs" />
     <Compile Include="View\CalculatorView.xaml.cs">
       <DependentUpon>CalculatorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ChartMenuView.xaml.cs">
+      <DependentUpon>ChartMenuView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\NotesView.xaml.cs">
       <DependentUpon>NotesView.xaml</DependentUpon>
@@ -258,6 +262,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\CalculatorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ChartMenuView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -8,8 +8,8 @@
         Title="NotesView" Height="450" Width="800"
         WindowStyle="None"
         Background="Transparent"
-        AllowsTransparency="True"        
-        >
+        AllowsTransparency="True" Loaded="Window_Loaded"        
+        ResizeMode="CanResizeWithGrip">
     
     <Border Background="#FF231A2B" BorderThickness="1" CornerRadius="25" MouseLeftButtonDown="DragnMove" >
         <Border.BorderBrush>
@@ -20,13 +20,39 @@
         </Border.BorderBrush>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="10"/>
+                <RowDefinition Height="25"/>                
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             
-            <RichTextBox Style="{DynamicResource NotesTextBox}" Grid.Row="1"
+            <Border Grid.Row="0" >
+                <DockPanel HorizontalAlignment="Center" Margin="2"  LastChildFill="True">
+                    <Menu Style="{DynamicResource MainMenu}" Height="Auto" DockPanel.Dock="Top" Width="Auto">
+                        <!--For now it could stay, but there are many things to change here-->
+                        <MenuItem Header="File">
+                            <MenuItem Header="Open" Click="Open_Click"/>
+                            <MenuItem Header="Save" Click="Save_Click"/>
+                            <MenuItem Header="Save As" Click="SaveAs_Click"/>
+                            <Separator/>
+                            <MenuItem Header="Exit" Click="Exit_Click"/>
+                        </MenuItem>
+                        <MenuItem Header="Edit">
+                            <MenuItem Header="Cut"/>
+                            <MenuItem Header="Copy"/>
+                            <MenuItem Header="Paste"/>
+                        </MenuItem>
+                        <MenuItem Header="Tools">
+                            <MenuItem Header="Log Out"/>
+                            <MenuItem Header="Copy"/>
+                            <MenuItem Header="Is Finished?" x:Name="FinishedOnly" IsCheckable="True" IsChecked="False"  />
+                            <MenuItem Header="Build-In Calculator" x:Name="systemCalculator" IsCheckable="True" IsChecked="False" />
+                        </MenuItem>
+                    </Menu>
+                </DockPanel>
+            </Border>            
+            <RichTextBox x:Name="NoteInTextBox" Margin="0"
+                Style="{DynamicResource NotesTextBox}" Grid.Row="1"
                          Background="#FF342244"
-                         Foreground="Gray"/>
+                         Foreground="Gray" TextChanged="RichTextBox_TextChanged"/>
         </Grid>
         
     </Border>

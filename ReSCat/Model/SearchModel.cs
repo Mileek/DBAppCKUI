@@ -18,38 +18,43 @@ namespace ReSCat.Model
         {
             if (selectedTextToSearch == "Planned Week")
             {
-                var searchedElements = from el in mainScreenEntity.MainTables.ToList() where (Convert.ToString(el.Planned_Week).Contains(SearchItems)) orderby el.Actual_Week ascending select el;
+                var searchedElements = from el in mainScreenEntity.MainTables.ToList() where (Convert.ToString(el.Planned_Week).Contains(SearchItems)) orderby el.Planned_Week ascending select el;
                 return searchedElements.ToList();                
             }
             else if (selectedTextToSearch == "Actual Week")
             {
-                var searchedElements = from el in mainScreenEntity.MainTables.ToList() where (Convert.ToString(el.Actual_Week).Contains(SearchItems)) orderby el.Actual_Week ascending select el;
+                var searchedElements = from el in mainScreenEntity.MainTables.ToList() where (Convert.ToString(el.Actual_Week).Contains(SearchItems)) orderby el.Planned_Week ascending select el;
                 return searchedElements.ToList();                
 
             }
             else if (selectedTextToSearch == "Weight")
             {
-                var searchedElements = from el in mainScreenEntity.MainTables.ToList() where (Convert.ToString(el.Weight).Contains(SearchItems)) orderby el.Actual_Week ascending select el;
+                var searchedElements = from el in mainScreenEntity.MainTables.ToList() where (Convert.ToString(el.Weight).Contains(SearchItems)) orderby el.Planned_Week ascending select el;
                 return searchedElements.ToList();                
             }
             else if (selectedTextToSearch == "Order")
             {
-                var searchedElements = from el in mainScreenEntity.MainTables where (el.Order.Contains(SearchItems)) orderby el.Actual_Week ascending select el;
+                var searchedElements = from el in mainScreenEntity.MainTables where (el.Order.Contains(SearchItems)) orderby el.Planned_Week ascending select el;
                 return searchedElements.ToList();                
             }
             else if (selectedTextToSearch == "Client Name")
             {
-                var searchedElements = from el in mainScreenEntity.MainTables where (el.Client_Name.Contains(SearchItems)) orderby el.Actual_Week ascending select el;
+                var searchedElements = from el in mainScreenEntity.MainTables where (el.Client_Name.Contains(SearchItems)) orderby el.Planned_Week ascending select el;
                 return searchedElements.ToList();                
             }
             else if (selectedTextToSearch == "Name")
             {
-                var searchedElements = from el in mainScreenEntity.MainTables where (el.Name.Contains(SearchItems)) orderby el.Actual_Week ascending select el;
+                var searchedElements = from el in mainScreenEntity.MainTables where (el.Name.Contains(SearchItems)) orderby el.Planned_Week ascending select el;
                 return searchedElements.ToList();                
+            }
+            else if (selectedTextToSearch == "Hall")
+            {
+                var searchedElements = from el in mainScreenEntity.MainTables.ToList() where (Convert.ToString(el.Hall).Contains(SearchItems)) orderby el.Planned_Week ascending select el;
+                return searchedElements.ToList();
             }
             else if (selectedTextToSearch == "Quantity")
             {
-                var searchedElements = from el in mainScreenEntity.MainTables.ToList() where (Convert.ToString(el.Quantity).Contains(SearchItems)) orderby el.Actual_Week ascending select el;
+                var searchedElements = from el in mainScreenEntity.MainTables.ToList() where (Convert.ToString(el.Quantity).Contains(SearchItems)) orderby el.Planned_Week ascending select el;
                 return searchedElements.ToList();                
             }
             else
@@ -89,6 +94,11 @@ namespace ReSCat.Model
             else if (selectedTextToSearch == "Name")
             {
                 var filterInFile = loadedExcelFile.Where(newSourceFile => (newSourceFile.Name).Contains(SearchItems));
+                return filterInFile.ToList();
+            }
+            else if (selectedTextToSearch == "Hall")
+            {
+                var filterInFile = loadedExcelFile.Where(newSourceFile => (newSourceFile.Hall).Contains(SearchItems));
                 return filterInFile.ToList();
             }
             else if (selectedTextToSearch == "Quantity")
