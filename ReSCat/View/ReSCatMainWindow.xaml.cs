@@ -37,11 +37,14 @@ namespace ReSCat.View
         //Variables
         private List<MainTable> loadedExcelFile = new List<MainTable>(); //Public variable that store list from external excel file
         private string fileNamePath;
-        private bool calendarVisibilityFlag = false;
+        private VisibilityCalendarViewModel visibility = new VisibilityCalendarViewModel();
+        private VisibilityDataBaseViewModel dataBaseView = new VisibilityDataBaseViewModel();
         private bool calculatorWindowFlag = false;
         private bool notesWindowFlag = false;
         private readonly CalculatorView calculatorWindow = new CalculatorView();
         private readonly NotesView notesWindow = new NotesView();
+
+
 
         //Methods
         private void ShowFinishedItemsOrAll()
@@ -250,21 +253,26 @@ namespace ReSCat.View
             }
             return workbook;
         }
+        private void DataBaseMenuVisibility()
+        {
+            MainDatabaseXAML.Visibility = dataBaseView.ShowDataBaseMenu;
+            labelInfoPanel.Visibility = dataBaseView.ShowDataBaseMenu;
+            typeDataBoxes.Visibility = dataBaseView.ShowDataBaseMenu;
+            modifyRecordsButtons.Visibility = dataBaseView.ShowDataBaseMenu;
+            extraFunctionButtons.Visibility = dataBaseView.ShowDataBaseMenu;
+        }
 
 
         //Controls
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
+            weekCalendarTextBox.Visibility = Visibility.Hidden;
+            weekCalendar.Visibility = Visibility.Hidden;
         }
-
 
         public ReSCatMainWindow()
         {
             InitializeComponent();
-
-            VisibilityCalendarViewModel calendarView = new VisibilityCalendarViewModel();
-            this.DataContext = calendarView;
 
         }
 
@@ -349,17 +357,25 @@ namespace ReSCat.View
         private void DeleteRecord_Click(object sender, RoutedEventArgs e)
         {
             using (MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities())
-            {
+            {   
                 if (loadedExcelFile.Count == 0)
                 {
                     //Working on MainDataBase - Entity
                     MainTable mainTableDel = (MainTable)MainDatabaseXAML.SelectedItem;
-                    mainScreenEntity.MainTables.Attach(mainTableDel);
-                    mainScreenEntity.MainTables.Remove(mainTableDel);
-                    mainScreenEntity.SaveChanges();
+                    if (mainTableDel == null)
+                    {
+                        MessageBox.Show("You need to run data base first!.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
 
-                    //Displaying                    
-                    ShowFinishedItemsOrAll();
+                        mainScreenEntity.MainTables.Attach(mainTableDel);
+                        mainScreenEntity.MainTables.Remove(mainTableDel);
+                        mainScreenEntity.SaveChanges();
+
+                        //Displaying                    
+                        ShowFinishedItemsOrAll();
+                    }
                 }
                 else
                 {
@@ -502,8 +518,6 @@ namespace ReSCat.View
             }
         }
 
-
-
         private void Save_Click(object sender, RoutedEventArgs e)
         {
             //In development
@@ -640,19 +654,6 @@ namespace ReSCat.View
             }
         }
 
-
-
-
-
-        private void Test_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-
-
-
-
         private void FinishedChecker_Click(object sender, RoutedEventArgs e)
         {
 
@@ -695,7 +696,6 @@ namespace ReSCat.View
             ShowFinishedItemsOrAll();
         }
 
-
         private void WeekCalendar_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             CalendarWeekModel selectedWeek = new CalendarWeekModel();
@@ -708,27 +708,23 @@ namespace ReSCat.View
             TextElementActualWeek.Text = selectedWeek.GetWeekNumber(clickedDate).ToString();
         }
 
-
-
-
         private void CalendarButton_Click(object sender, RoutedEventArgs e)
         {
-            VisibilityCalendarViewModel calendarView = new VisibilityCalendarViewModel();
-
-            if (calendarVisibilityFlag == false)
+            if (visibility.ShowCalendar == Visibility.Visible)
             {
-                calendarView.ShowCalendar = Visibility.Visible;
-                this.DataContext = calendarView.ShowCalendar;
-
-                calendarVisibilityFlag = true;
+                visibility.ShowCalendar = Visibility.Hidden;
+                weekCalendarTextBox.Visibility = visibility.ShowCalendar;
+                weekCalendar.Visibility = visibility.ShowCalendar;
+                DataContext = visibility;
             }
-            else if (calendarVisibilityFlag == true)
+            else
             {
-                this.DataContext = calendarView;
-                calendarVisibilityFlag = false;
+                visibility.ShowCalendar = Visibility.Visible;
+                weekCalendarTextBox.Visibility = visibility.ShowCalendar;
+                weekCalendar.Visibility = visibility.ShowCalendar;
+                DataContext = visibility;
             }
         }
-
 
         private void CalculatorButton_Click(object sender, RoutedEventArgs e)
         {
@@ -753,7 +749,6 @@ namespace ReSCat.View
             }
         }
 
-
         private void NotesButton_Click(object sender, RoutedEventArgs e)
         {
 
@@ -773,12 +768,6 @@ namespace ReSCat.View
         {
 
         }
-
-        private void ChartMenu_Click(object sender, RoutedEventArgs e)
-        {
-            MainWindow.Content = new ChartMenuView();
-        }
-
 
         private void Open_Click(object sender, RoutedEventArgs e)
         {
@@ -837,7 +826,8 @@ namespace ReSCat.View
                     using (XLWorkbook workbook = new XLWorkbook())
                     {
                         MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities();
-                        //this works only for small tables ~1000 rows, because its speed
+
+                        //this works only for small tables ~1000 rows, because its speed, might as well use await 
                         mainScreenEntity.MainTables.RemoveRange(mainScreenEntity.MainTables);
 
                         mainScreenEntity.SaveChanges();
@@ -855,6 +845,99 @@ namespace ReSCat.View
                     MessageBox.Show(ex.Message);
                 }
             }
+        }
+
+        private void DataBaseMenu_Click(object sender, RoutedEventArgs e)
+        {
+            logsMenu.IsChecked = false;
+            chartsMenu.IsChecked = false;
+            if ((bool)dataBaseMenu.IsChecked == true)
+            {
+                MainWindow.Content = new UserControl();
+
+                dataBaseView.ShowDataBaseMenu = Visibility.Visible;
+                DataBaseMenuVisibility();
+
+            }
+            else if ((bool)dataBaseMenu.IsChecked == false)
+            {
+                MainWindow.Content = new UserControl();
+
+                dataBaseView.ShowDataBaseMenu = Visibility.Hidden;
+
+                DataBaseMenuVisibility();
+
+                weekCalendarTextBox.Visibility = Visibility.Hidden;
+                weekCalendar.Visibility = Visibility.Hidden;
+
+                visibility.ShowCalendar = Visibility.Hidden;
+            }
+
+        }
+
+        private void LogsMenu_Click(object sender, RoutedEventArgs e)
+        {
+            dataBaseMenu.IsChecked = false;
+            chartsMenu.IsChecked = false;
+
+            if ((bool)dataBaseMenu.IsChecked == false)
+            {
+                dataBaseView.ShowDataBaseMenu = Visibility.Hidden;
+                DataBaseMenuVisibility();
+
+                weekCalendarTextBox.Visibility = Visibility.Hidden;
+                weekCalendar.Visibility = Visibility.Hidden;
+
+                visibility.ShowCalendar = Visibility.Hidden;
+            }
+            if (logsMenu.IsChecked == true)
+            {
+                MainWindow.Content = new LogsView();
+            }
+            else if (logsMenu.IsChecked == false)
+            {
+                MainWindow.Content = new UserControl();
+                dataBaseMenu.IsChecked = true;
+
+                dataBaseView.ShowDataBaseMenu = Visibility.Visible;
+
+                DataBaseMenuVisibility();
+
+            }
+
+        }
+
+        private void ChartsMenu_Click(object sender, RoutedEventArgs e)
+        {
+            dataBaseMenu.IsChecked = false;
+            logsMenu.IsChecked = false;
+
+            if ((bool)dataBaseMenu.IsChecked == false)
+            {
+                dataBaseView.ShowDataBaseMenu = Visibility.Hidden;
+
+                DataBaseMenuVisibility();
+
+                weekCalendarTextBox.Visibility = Visibility.Hidden;
+                weekCalendar.Visibility = Visibility.Hidden;
+
+                visibility.ShowCalendar = Visibility.Hidden;
+            }
+
+            if (chartsMenu.IsChecked == true)
+            {
+                MainWindow.Content = new ChartMenuView();
+            }
+            else if (chartsMenu.IsChecked == false)
+            {
+                MainWindow.Content = new UserControl();
+                dataBaseMenu.IsChecked = true;
+
+                dataBaseView.ShowDataBaseMenu = Visibility.Visible;
+
+                DataBaseMenuVisibility();
+            }
+
         }
     }
 }

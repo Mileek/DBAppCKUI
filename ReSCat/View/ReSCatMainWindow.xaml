@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         TextOptions.TextFormattingMode="Display"    
         TextOptions.TextRenderingMode="Auto" 
-        xmlns:local="clr-namespace:ReSCat" xmlns:viewmodel="clr-namespace:ReSCat.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:VisibilityCalendarViewModel}"
+        xmlns:local="clr-namespace:ReSCat" xmlns:viewmodel="clr-namespace:ReSCat.ViewModel" xmlns:model="clr-namespace:ReSCat.Model"
         mc:Ignorable="d"
         Title="ReSCatMainWindow" Height="680" Width="1320" FontFamily="Arial" 
         WindowStyle="None"
@@ -13,8 +13,8 @@
         AllowsTransparency="True" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen"
         ResizeMode="CanResizeWithGrip"
         >
-    
-    
+   
+
     <Border Background="#FF231A2B" BorderThickness="1" CornerRadius="25" MouseLeftButtonDown="DragnMove" >
         <Border.BorderBrush>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -22,9 +22,9 @@
                 <GradientStop Color="DarkRed" Offset="1"/>
             </LinearGradientBrush>
         </Border.BorderBrush>
-        
+
         <!--Columna and row definitions-->
-        <Grid>            
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition MinHeight="500" Height="*" />
@@ -45,7 +45,7 @@
             </Grid.ColumnDefinitions>
 
             <Frame x:Name="MainWindow" Grid.RowSpan="7" Grid.ColumnSpan="4" Grid.Column="1" Grid.Row="1" NavigationUIVisibility="Hidden"/>
-            
+
             <!--Top Panel-->
             <Label Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Content="User:"/>
 
@@ -63,13 +63,12 @@
                             <MenuItem Header="Exit" Click="Exit_Click"/>
                         </MenuItem>
                         <MenuItem Header="Edit">
-                            <MenuItem Header="Cut"/>
-                            <MenuItem Header="Copy" />
-                            <MenuItem Header="Paste"/>
+                            <MenuItem Header="Cut - in dev"/>
+                            <MenuItem Header="Copy - in dev" />
+                            <MenuItem Header="Paste - in dev"/>
                         </MenuItem>
                         <MenuItem Header="Tools">
-                            <MenuItem Header="Log Out"/>
-                            <MenuItem Header="Copy"/>
+                            <MenuItem Header="Log Out - in dev"/>
                             <MenuItem Header="Is Finished?" x:Name="FinishedOnly" IsCheckable="True" IsChecked="False" Click="FinishedOnly_Click" />
                             <MenuItem Header="Build-In Calculator" x:Name="systemCalculator" IsCheckable="True" IsChecked="False" />
                         </MenuItem>
@@ -105,7 +104,7 @@
                                     <GradientStop Color="DarkRed" Offset="1"/>
                                 </LinearGradientBrush>
                             </ComboBoxItem.BorderBrush>
-                            
+
                             <TextBlock x:Name="PlannedWeekChoosen" FontWeight="SemiBold" Foreground="White">Planned Week</TextBlock>
                         </ComboBoxItem>
                         <ComboBoxItem Background="#FF446A8C">
@@ -115,7 +114,7 @@
                                     <GradientStop Color="DarkRed" Offset="1"/>
                                 </LinearGradientBrush>
                             </ComboBoxItem.BorderBrush>
-                            
+
                             <TextBlock FontWeight="SemiBold" Foreground="White">Actual Week</TextBlock>
                         </ComboBoxItem>
                         <ComboBoxItem Background="#FF446A8C">
@@ -125,7 +124,7 @@
                                     <GradientStop Color="DarkRed" Offset="1"/>
                                 </LinearGradientBrush>
                             </ComboBoxItem.BorderBrush>
-                            
+
                             <TextBlock FontWeight="SemiBold" Foreground="White">Weight</TextBlock>
                         </ComboBoxItem>
                         <ComboBoxItem Background="#FF446A8C">
@@ -135,7 +134,7 @@
                                     <GradientStop Color="DarkRed" Offset="1"/>
                                 </LinearGradientBrush>
                             </ComboBoxItem.BorderBrush>
-                            
+
                             <TextBlock FontWeight="SemiBold" Foreground="White">Order</TextBlock>
                         </ComboBoxItem>
                         <ComboBoxItem Background="#FF446A8C">
@@ -145,7 +144,7 @@
                                     <GradientStop Color="DarkRed" Offset="1"/>
                                 </LinearGradientBrush>
                             </ComboBoxItem.BorderBrush>
-                            
+
                             <TextBlock FontWeight="SemiBold" Foreground="White">Client Name</TextBlock>
                         </ComboBoxItem>
                         <ComboBoxItem Background="#FF446A8C">
@@ -155,7 +154,7 @@
                                     <GradientStop Color="DarkRed" Offset="1"/>
                                 </LinearGradientBrush>
                             </ComboBoxItem.BorderBrush>
-                            
+
                             <TextBlock FontWeight="SemiBold" Foreground="White">Name</TextBlock>
                         </ComboBoxItem>
                         <ComboBoxItem Background="#FF446A8C">
@@ -175,7 +174,7 @@
                                     <GradientStop Color="DarkRed" Offset="1"/>
                                 </LinearGradientBrush>
                             </ComboBoxItem.BorderBrush>
-                            
+
                             <TextBlock FontWeight="SemiBold" Foreground="White">Quantity</TextBlock>
                         </ComboBoxItem>
                     </ComboBox>
@@ -186,22 +185,22 @@
                              FontSize="16" Foreground="White"
                              Style="{StaticResource Search_BTN}"
                              Click="Search_Click"/>
-                    <RadioButton Height="35"  Margin="0,5,0,5"
-                             FontSize="16" Foreground="White" Content="DataBase"
-                             Style="{StaticResource Highlight_BTN}"/>
-                    <RadioButton Height="35" Margin="0,5,0,5"
-                             FontSize="16" Foreground="White" Content="Charts"
-                             Style="{StaticResource Highlight_BTN}" Click="ChartMenu_Click"
+                    <ToggleButton Style="{StaticResource MenuButton}" IsChecked="True" Height="35"  Margin="5"
+                             FontSize="16" Foreground="White" x:Name="dataBaseMenu" Content="DataBase"
+                             Click="DataBaseMenu_Click"/>
+                    <ToggleButton Style="{StaticResource MenuButton}" IsChecked="False" Height="35" Margin="5"
+                             FontSize="16" Foreground="White" x:Name="chartsMenu" Content="Charts"
+                             Click="ChartsMenu_Click"
                                  />
-                    <RadioButton Height="35" Margin="0,5,0,5"
-                             FontSize="16" Foreground="White" Content="Logs"
-                             Style="{StaticResource Highlight_BTN}"/>
+                    <ToggleButton Style="{StaticResource MenuButton}" IsChecked="False" Height="35" Margin="5"
+                             FontSize="16" Foreground="White" x:Name="logsMenu" Content="Logs" Click="LogsMenu_Click"
+                             />
                 </StackPanel>
             </Border>
             <StackPanel Grid.Column="0" Grid.RowSpan="4" Grid.Row="4">
                 <RadioButton Content="Log Out" Height="60" Margin="10"
                              FontSize="24" Foreground="White"
-                             Style="{StaticResource Highlight_BTN}"/>
+                             Style="{StaticResource MenuButton}"/>
             </StackPanel>
 
             <GridSplitter Grid.Column="0" Grid.Row="1" Grid.RowSpan="7" HorizontalAlignment="Right" Width="2">
@@ -214,7 +213,9 @@
             </GridSplitter>
 
             <!--Middle Panel-->
-            <DataGrid Style="{DynamicResource DataGridStyle}" x:Name="MainDatabaseXAML" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3"  
+
+            <DataGrid Style="{DynamicResource DataGridStyle}" d:DataContext="{d:DesignInstance Type=viewmodel:VisibilityDataBaseViewModel}"
+                      x:Name="MainDatabaseXAML" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3"  
                       Margin="10" HorizontalAlignment="Stretch" 
                       SelectionChanged="MainDatabaseXAML_SelectionChanged" CanUserDeleteRows="False" 
                       CanUserAddRows="False" VerticalAlignment="Top" 
@@ -224,7 +225,8 @@
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Auto"
                       MaxHeight="480"
-                      SnapsToDevicePixels="True" >                
+                      SnapsToDevicePixels="True" 
+                      Visibility="{Binding ShowDataBaseMenu}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Visibility="Hidden" Header="Unique Id" Binding="{Binding Id}"/>
                     <DataGridTextColumn Header="Planned Week" Binding="{Binding Planned_Week}"/>
@@ -249,7 +251,9 @@
 
 
             <!--Bottom Panel-->
-            <StackPanel Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal">
+            <StackPanel x:Name="labelInfoPanel"
+                Visibility="{Binding ShowDataBaseMenu}" d:DataContext="{d:DesignInstance Type=viewmodel:VisibilityDataBaseViewModel}"
+                        Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal">
                 <Label Content="Enter Planned Week" Margin="3,0,3,3" HorizontalContentAlignment="Center" Width="125" BorderThickness="1" Foreground="White" FontStretch="Normal">
                     <Label.BorderBrush>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -309,7 +313,9 @@
 
             </StackPanel>
 
-            <StackPanel Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Stretch" Orientation="Horizontal">
+            <StackPanel x:Name="typeDataBoxes"
+                Visibility="{Binding ShowDataBaseMenu}" d:DataContext="{d:DesignInstance Type=viewmodel:VisibilityDataBaseViewModel}"
+                        Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Stretch" Orientation="Horizontal">
                 <TextBox  TextWrapping="Wrap" x:Name="TextElementPlannedWeek" MinWidth="100" 
                       Width="125" HorizontalAlignment="Left" Margin="3,0,3,3"
                       BorderThickness="1" Foreground="White"
@@ -343,7 +349,9 @@
             </StackPanel>
 
 
-            <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.ColumnSpan="3" Grid.Column="1" HorizontalAlignment="Center">
+            <StackPanel x:Name="modifyRecordsButtons"
+                Visibility="{Binding ShowDataBaseMenu}" d:DataContext="{d:DesignInstance Type=viewmodel:VisibilityDataBaseViewModel}"
+                        Orientation="Horizontal" Grid.Row="6" Grid.ColumnSpan="3" Grid.Column="1" HorizontalAlignment="Center">
                 <RadioButton Content="Add New Element" x:Name="AddElementToGrid" 
                              Margin="10,5,10,5" Height="25" Width="120"
                              Foreground="White"
@@ -430,9 +438,12 @@
                     </ComboBoxItem>
                 </ComboBox>
             </StackPanel>
-            
+
             <!--Right Panel-->
-            <StackPanel Grid.Column="4" Grid.Row="1" Height="30" HorizontalAlignment="Center" Orientation="Horizontal" VerticalAlignment="Top">
+            <StackPanel x:Name="extraFunctionButtons"
+                Visibility="{Binding ShowDataBaseMenu}" Grid.Column="4" Grid.Row="1" Height="30" 
+                        HorizontalAlignment="Center" Orientation="Horizontal" VerticalAlignment="Top"
+                        d:DataContext="{d:DesignInstance Type=viewmodel:VisibilityDataBaseViewModel}">
                 <RadioButton Content="Calendar" MinWidth="60" Foreground="White" 
                              Style="{StaticResource Functional_BTN}" Click="CalendarButton_Click"
                              />
@@ -446,12 +457,14 @@
             <Viewbox Height="200" Grid.Column="4" Grid.Row="1" 
                      Margin="0,40,0,0" VerticalAlignment="Top"
                      HorizontalAlignment="Left" >
-                <Calendar Grid.IsSharedSizeScope="True" Language="en-us"
+                <Calendar d:DataContext="{d:DesignInstance Type=viewmodel:VisibilityCalendarViewModel}"
+                    Grid.IsSharedSizeScope="True" Language="en-us"
                       Name="weekCalendar"
                       FirstDayOfWeek="Monday" MouseDoubleClick="WeekCalendar_MouseDoubleClick" 
-                      Visibility="{Binding ShowCalendar}"
+                      Visibility="{Binding ShowCalendar, UpdateSourceTrigger=PropertyChanged}"
                       BorderThickness="2"    
-                      Background="LightGray"    
+                      Background="LightGray" 
+                       ToolTip="Double-Click to show week."
                     >
                     <Calendar.BorderBrush>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -467,6 +480,7 @@
                      x:Name="weekCalendarTextBox"
                      TextAlignment="Center"
                      VerticalContentAlignment="Center"
+                     d:DataContext="{d:DesignInstance Type=viewmodel:VisibilityCalendarViewModel}"
                      Visibility="{Binding ShowCalendar}"
                      IsReadOnly="True"/>
         </Grid>

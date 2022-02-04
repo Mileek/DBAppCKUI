@@ -135,15 +135,19 @@
     <Compile Include="MainTable.cs">
       <DependentUpon>MainDataBaseModels.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\CalendarWeekModel.cs" />
-    <Compile Include="Model\SearchModel.cs" />
-    <Compile Include="ViewModel\DataBaseViewModel.cs" />
+    <Compile Include="Classes\CalendarWeekModel.cs" />
+    <Compile Include="Classes\SearchModel.cs" />
+    <Compile Include="Model\ObservableObject.cs" />
     <Compile Include="ViewModel\VisibilityCalendarViewModel.cs" />
+    <Compile Include="ViewModel\VisibilityDataBaseViewModel.cs" />
     <Compile Include="View\CalculatorView.xaml.cs">
       <DependentUpon>CalculatorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ChartMenuView.xaml.cs">
       <DependentUpon>ChartMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\LogsView.xaml.cs">
+      <DependentUpon>LogsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\NotesView.xaml.cs">
       <DependentUpon>NotesView.xaml</DependentUpon>
@@ -266,6 +270,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\ChartMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\LogsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -6,7 +6,6 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/MenuButtonTheme.xaml"/>
                 <ResourceDictionary Source="Resources/FunctionalButtonTheme.xaml"/>
                 <ResourceDictionary Source="Resources/SearchButtonTheme.xaml"/>
                 <ResourceDictionary Source="Resources/TextBoxTheme.xaml"/>
@@ -16,6 +15,7 @@
                 <ResourceDictionary Source="Resources/DataGridTheme.xaml"/>
                 <ResourceDictionary Source="Resources/RichTextBoxTheme.xaml"/>
                 <ResourceDictionary Source="Resources/TestTheme.xaml"/>
+                <ResourceDictionary Source="Resources/MenuButtonTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
