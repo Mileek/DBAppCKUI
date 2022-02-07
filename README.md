@@ -121,16 +121,17 @@ Frameworks used in the project:
 <!-- GETTING STARTED -->
 ## Getting Started
 
-To run the application all you have to do is run ReSCat app from Debug folder (It's not relesed, so there is no relese app).
+Application is still in development and many of its functionalities are not bug-proof.
 
 
 ### Prerequisites
 
-You need to have SQLServer to use the app. Without it application will run normally, but there will be no possibility of working on DataBse (You could only edit XML files).
+
+
 
 ### Installation
 
-There is not really an installation process, all you have to do is download project and run the app.
+To run the application all you have to do is download pre-relese version and then install it.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
