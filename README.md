@@ -126,7 +126,7 @@ Application is still in development and many of its functionalities are not bug-
 
 ### Prerequisites
 
-
+You need to have SQL Server Express LocalDB installed due to .mdf file with main data base info.
 
 
 ### Installation
