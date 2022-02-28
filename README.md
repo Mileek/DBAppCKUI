@@ -82,7 +82,10 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-![image](https://user-images.githubusercontent.com/95537833/152528784-5e2798b1-72f6-468f-9ac7-e4b129af4f5a.png)
+![image]![image](https://user-images.githubusercontent.com/95537833/156056982-995c8173-9583-42d6-bc07-68452e79c680.png)
+![image](https://user-images.githubusercontent.com/95537833/156057050-a2252f37-8a6e-486b-a1e1-03dbea6f43e5.png)
+![image](https://user-images.githubusercontent.com/95537833/156057135-bde30ddb-8be5-4170-925e-1af45c781d81.png)
+
 
 
 What you are seeing is a simple wpf application, in which i used to learn: WPF, C#, XAML, SQL and Entity Framework and ClosedXML. Everything written inside is based on my own insights, tips from stackoverflow or diffrent pages.
