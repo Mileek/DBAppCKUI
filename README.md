@@ -82,7 +82,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-![image]![image](https://user-images.githubusercontent.com/95537833/156056982-995c8173-9583-42d6-bc07-68452e79c680.png)
+![image](https://user-images.githubusercontent.com/95537833/156056982-995c8173-9583-42d6-bc07-68452e79c680.png)
 ![image](https://user-images.githubusercontent.com/95537833/156057050-a2252f37-8a6e-486b-a1e1-03dbea6f43e5.png)
 ![image](https://user-images.githubusercontent.com/95537833/156057135-bde30ddb-8be5-4170-925e-1af45c781d81.png)
 
