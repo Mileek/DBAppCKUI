@@ -97,7 +97,11 @@ There are also functions like:
 
 * Simple notepad,
 
-* Nawigation menu.
+* Nawigation menu,
+
+** Charts
+
+** Log menu.
 
 
 
@@ -111,6 +115,7 @@ Frameworks used in the project:
 
 * [Entity Framework](https://docs.microsoft.com/en-us/ef/)
 * [ClosedXML](https://github.com/ClosedXML/ClosedXML/)
+* [ScottPlott](https://github.com/ScottPlot/ScottPlot)
 
 
 
@@ -123,10 +128,13 @@ Frameworks used in the project:
 
 Application is still in development and many of its functionalities are not bug-proof.
 
+- Currently I do not know what functionalities to add to the application.
+
 
 ### Prerequisites
 
-You need to have SQL Server Express LocalDB installed due to .mdf file with main data base info.
+You need to have SQL Server Express LocalDB installed due to .mdf file with main data base info (LocalDB will be installed from exe file).
+Unfortunately I am unable to test the app.
 
 
 ### Installation
@@ -164,12 +172,13 @@ The application was meant to be self-sufficient. In my previous company I had to
 - [x] Add Nawigation Panel
 - [x] XML Files Handling 
 - [ ] Bug, expection handling
-- [ ] Add New Panels (Charts, Logs)
-- [ ] Add functional minimalize and close buttons
-- [ ] Implementing MVVM model
+- [x] Add New Panels (Charts, Logs)
+- [ ] Add New Functions
+- [x] Add functional minimalize and close buttons
+- [/] Implementing MVVM model
 - [ ] Add Login Menu
 - [ ] Admin Functionalities
-- [ ] Notepad And Calculator full functionality
+- [~] Notepad And Calculator full functionality
 
 
 
@@ -181,7 +190,7 @@ The application was meant to be self-sufficient. In my previous company I had to
 <!-- CONTRIBUTING -->
 ## Contributing
 
-feel free to add something to my project!
+Feel free to add something to my project!
 
 
 1. Fork the Project
