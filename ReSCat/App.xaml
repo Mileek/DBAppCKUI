@@ -16,6 +16,7 @@
                 <ResourceDictionary Source="Resources/RichTextBoxTheme.xaml"/>
                 <ResourceDictionary Source="Resources/TestTheme.xaml"/>
                 <ResourceDictionary Source="Resources/MenuButtonTheme.xaml"/>
+                <ResourceDictionary Source="Resources/TopRightButtonTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

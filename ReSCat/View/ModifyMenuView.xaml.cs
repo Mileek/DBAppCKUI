@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace ReSCat.View
 {
     /// <summary>
-    /// Logika interakcji dla klasy LogsView.xaml
+    /// Logika interakcji dla klasy ModifyMenuView.xaml
     /// </summary>
-    public partial class LogsView : Page
+    public partial class ModifyMenuView : Page
     {
-        public LogsView()
+        public ModifyMenuView()
         {
             InitializeComponent();
         }

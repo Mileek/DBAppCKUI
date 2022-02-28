@@ -9,6 +9,44 @@
       Title="ChartMenuView">
 
     <Grid>
-        <TextBlock Text="chart menu" FontSize="100"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="100" />
+        </Grid.ColumnDefinitions>
+        <WpfPlot Margin="10" Name="PlotWPF" Grid.Column="0" Grid.Row="0" Grid.RowSpan="11"/>
+
+        <Label Content="Axis X:" Foreground="White" Grid.Column="2" Grid.Row="0"/>
+        <CheckBox Margin="5,10,0,0" Name="Planned_Week" Content="Planned Week" Grid.Column="1" Grid.Row="1" Foreground="White"/>
+        <CheckBox Margin="5,10,0,0" Name="Actual_Week" Content="Actual Week" Grid.Column="1" Grid.Row="2" Foreground="White"/>
+        <!--<CheckBox Margin="5,10,0,0" Name="Order" Content="Order" Grid.Column="1" Grid.Row="3" Foreground="White"/>
+        <CheckBox Margin="5,10,0,0" Name="Client_Name" Content="Client Name" Grid.Column="1" Grid.Row="4" Foreground="White"/>
+        <CheckBox Margin="5,10,0,0" Name="Element_Name" Content="Element Name" Grid.Column="1" Grid.Row="5" Foreground="White"/>-->
+        <Label Content="Axis Y:" Foreground="White" Grid.Column="2" Grid.Row="6"/>
+        <CheckBox Margin="5,10,0,0" Name="Weight" Content="Weight" Grid.Column="1" Grid.Row="7" Foreground="White"/>
+        <CheckBox Margin="5,10,0,0" Name="Quantity" Content="Quantity" Grid.Column="1" Grid.Row="8" Foreground="White"/>
+        <RadioButton Content="Show Charts" x:Name="ShowCharts" 
+                     Foreground="White" Margin="5"
+                     Grid.Column="2" Grid.Row="9"
+                     Style="{StaticResource Functional_BTN}" Click="ShowCharts_Click"
+                     />
+        <RadioButton Content="Clear Charts" x:Name="ClearCharts" 
+                     Foreground="White" Margin="5" Height="25" Width="100"
+                     Grid.Column="0" Grid.Row="11" FontWeight="SemiBold" FontSize="14"
+                     Style="{StaticResource Functional_BTN}" Click="ClearCharts_Click"
+                     />
     </Grid>
 </Page>

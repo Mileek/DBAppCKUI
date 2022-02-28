@@ -21,6 +21,8 @@ using ReSCat.Model;
 using ReSCat.View;
 using ReSCat.ViewModel;
 using Microsoft.Win32;
+using System.Data.Entity;
+using ReSCat.Classes;
 
 namespace ReSCat.View
 {
@@ -37,12 +39,13 @@ namespace ReSCat.View
         //Variables
         private List<MainTable> loadedExcelFile = new List<MainTable>(); //Public variable that store list from external excel file
         private string fileNamePath;
-        private VisibilityCalendarViewModel visibility = new VisibilityCalendarViewModel();
-        private VisibilityDataBaseViewModel dataBaseView = new VisibilityDataBaseViewModel();
+        private DataGridViewModel dataBaseView = new DataGridViewModel();
         private bool calculatorWindowFlag = false;
         private bool notesWindowFlag = false;
         private readonly CalculatorView calculatorWindow = new CalculatorView();
         private readonly NotesView notesWindow = new NotesView();
+        private MainUIViewModel mainFunctionalities = new MainUIViewModel();
+
 
 
 
@@ -50,21 +53,21 @@ namespace ReSCat.View
         private void ShowFinishedItemsOrAll()
         {
             MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities();
-            if (loadedExcelFile.Count == 0)
+            if (loadedExcelFile.Count == 0) //Check if there is any excel file
             {
                 if (FinishedOnly.IsChecked == true)
                 {
-                    var elementsInMainDB = from el in mainScreenEntity.MainTables
-                                           where el.IsFinished.Value == true
-                                           orderby el.Actual_Week ascending
-                                           select el;
+                    var elementsInMainDB = from element in mainScreenEntity.MainTables
+                                           where element.IsFinished.Value == true
+                                           orderby element.Planned_Week ascending
+                                           select element;
                     MainDatabaseXAML.ItemsSource = elementsInMainDB.ToList();
                 }
                 else
                 {
-                    var elementsInMainDB = from el in mainScreenEntity.MainTables
-                                           orderby el.Actual_Week ascending
-                                           select el;
+                    var elementsInMainDB = from element in mainScreenEntity.MainTables
+                                           orderby element.Planned_Week ascending
+                                           select element;
                     MainDatabaseXAML.ItemsSource = elementsInMainDB.ToList();
                 }
 
@@ -82,17 +85,17 @@ namespace ReSCat.View
 
                     if (FinishedOnly.IsChecked == true)
                     {
-                        var elementsInMainDB = from el in mainScreenEntity.MainTables
-                                               where el.IsFinished.Value == true
-                                               orderby el.Actual_Week ascending
-                                               select el;
+                        var elementsInMainDB = from element in mainScreenEntity.MainTables
+                                               where element.IsFinished.Value == true
+                                               orderby element.Planned_Week ascending
+                                               select element;
                         MainDatabaseXAML.ItemsSource = elementsInMainDB.ToList();
                     }
                     else
                     {
-                        var elementsInMainDB = from el in mainScreenEntity.MainTables
-                                               orderby el.Actual_Week ascending
-                                               select el;
+                        var elementsInMainDB = from element in mainScreenEntity.MainTables
+                                               orderby element.Planned_Week ascending
+                                               select element;
                         MainDatabaseXAML.ItemsSource = elementsInMainDB.ToList();
                     }
                 }
@@ -165,8 +168,11 @@ namespace ReSCat.View
                 Quantity = Convert.ToInt32(TextElementQuantity.Text),
                 IsFinished = false
             };
+            //Sending added element the Logs
+            LogsModel.LogAdd = mainTableAdd;
             return mainTableAdd;
         }
+
         private void ClearTextNotValue()
         {
             TextElementPlannedWeek.Text = string.Empty;
@@ -185,10 +191,10 @@ namespace ReSCat.View
             TextElementName.Text = string.Empty;
             TextElementQuantity.Text = string.Empty;
         }
+        
 
         private MainTable UpdateRecordInDataBase(MainTable mainTableUpdate)
         {
-
 
             mainTableUpdate.Planned_Week = Convert.ToInt32(TextElementPlannedWeek.Text);
             mainTableUpdate.Actual_Week = Convert.ToInt32(TextElementActualWeek.Text);
@@ -198,6 +204,10 @@ namespace ReSCat.View
             mainTableUpdate.Name = TextElementName.Text;
             mainTableUpdate.Hall = ((TextBlock)((ComboBoxItem)hallList.SelectedValue).Content).Text; //again it might be replaced to combobox value selected, then content
             mainTableUpdate.Quantity = Convert.ToInt32(TextElementQuantity.Text);
+
+            
+            //Sending to Log Update AFTER operation
+            LogsModel.LogUpdate = mainTableUpdate;
 
             return mainTableUpdate;
         }
@@ -266,14 +276,13 @@ namespace ReSCat.View
         //Controls
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            weekCalendarTextBox.Visibility = Visibility.Hidden;
-            weekCalendar.Visibility = Visibility.Hidden;
+
         }
 
         public ReSCatMainWindow()
         {
             InitializeComponent();
-
+            mainFunctionalities = (MainUIViewModel)this.DataContext;
         }
 
 
@@ -357,7 +366,7 @@ namespace ReSCat.View
         private void DeleteRecord_Click(object sender, RoutedEventArgs e)
         {
             using (MainDataBaseEntities mainScreenEntity = new MainDataBaseEntities())
-            {   
+            {
                 if (loadedExcelFile.Count == 0)
                 {
                     //Working on MainDataBase - Entity
@@ -368,6 +377,8 @@ namespace ReSCat.View
                     }
                     else
                     {
+                        //Sending record to Log Block
+                        LogsModel.LogDel = mainTableDel;
 
                         mainScreenEntity.MainTables.Attach(mainTableDel);
                         mainScreenEntity.MainTables.Remove(mainTableDel);
@@ -395,9 +406,10 @@ namespace ReSCat.View
                 {
                     MainTable mainTableUpdate = (MainTable)MainDatabaseXAML.SelectedItem;
 
+                    
+
                     if (loadedExcelFile.Count == 0)
                     {
-
                         mainScreenEntity.MainTables.Attach(mainTableUpdate);
 
                         UpdateRecordInDataBase(mainTableUpdate);
@@ -508,7 +520,7 @@ namespace ReSCat.View
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("Close Application?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+            if (MessageBox.Show("Close the Application?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
             {
                 //After pressing No, currently no idea
             }
@@ -710,20 +722,30 @@ namespace ReSCat.View
 
         private void CalendarButton_Click(object sender, RoutedEventArgs e)
         {
-            if (visibility.ShowCalendar == Visibility.Visible)
+            //if (visibility.ShowCalendar == Visibility.Visible)
+            //{
+            //    visibility.ShowCalendar = Visibility.Hidden;
+            //    weekCalendarTextBox.Visibility = visibility.ShowCalendar;
+            //    weekCalendar.Visibility = visibility.ShowCalendar;
+            //}
+            //else
+            //{
+            //    visibility.ShowCalendar = Visibility.Visible;
+            //    weekCalendarTextBox.Visibility = visibility.ShowCalendar;
+            //    weekCalendar.Visibility = visibility.ShowCalendar;
+            //}
+            if (mainFunctionalities.ShowCalendar == Visibility.Visible)
             {
-                visibility.ShowCalendar = Visibility.Hidden;
-                weekCalendarTextBox.Visibility = visibility.ShowCalendar;
-                weekCalendar.Visibility = visibility.ShowCalendar;
-                DataContext = visibility;
+                mainFunctionalities.ShowCalendar = Visibility.Hidden;
+                weekCalendarTextBox.Visibility = mainFunctionalities.ShowCalendar;
+
             }
             else
             {
-                visibility.ShowCalendar = Visibility.Visible;
-                weekCalendarTextBox.Visibility = visibility.ShowCalendar;
-                weekCalendar.Visibility = visibility.ShowCalendar;
-                DataContext = visibility;
+                mainFunctionalities.ShowCalendar = Visibility.Visible;
+                weekCalendarTextBox.Visibility = mainFunctionalities.ShowCalendar;
             }
+
         }
 
         private void CalculatorButton_Click(object sender, RoutedEventArgs e)
@@ -851,6 +873,7 @@ namespace ReSCat.View
         {
             logsMenu.IsChecked = false;
             chartsMenu.IsChecked = false;
+            modifyMenu.IsChecked = false;
             if ((bool)dataBaseMenu.IsChecked == true)
             {
                 MainWindow.Content = new UserControl();
@@ -869,8 +892,6 @@ namespace ReSCat.View
 
                 weekCalendarTextBox.Visibility = Visibility.Hidden;
                 weekCalendar.Visibility = Visibility.Hidden;
-
-                visibility.ShowCalendar = Visibility.Hidden;
             }
 
         }
@@ -879,7 +900,7 @@ namespace ReSCat.View
         {
             dataBaseMenu.IsChecked = false;
             chartsMenu.IsChecked = false;
-
+            modifyMenu.IsChecked = false;
             if ((bool)dataBaseMenu.IsChecked == false)
             {
                 dataBaseView.ShowDataBaseMenu = Visibility.Hidden;
@@ -887,12 +908,10 @@ namespace ReSCat.View
 
                 weekCalendarTextBox.Visibility = Visibility.Hidden;
                 weekCalendar.Visibility = Visibility.Hidden;
-
-                visibility.ShowCalendar = Visibility.Hidden;
             }
             if (logsMenu.IsChecked == true)
             {
-                MainWindow.Content = new LogsView();
+                MainWindow.Content = new LogsMenuView();
             }
             else if (logsMenu.IsChecked == false)
             {
@@ -911,7 +930,7 @@ namespace ReSCat.View
         {
             dataBaseMenu.IsChecked = false;
             logsMenu.IsChecked = false;
-
+            modifyMenu.IsChecked = false;
             if ((bool)dataBaseMenu.IsChecked == false)
             {
                 dataBaseView.ShowDataBaseMenu = Visibility.Hidden;
@@ -920,8 +939,6 @@ namespace ReSCat.View
 
                 weekCalendarTextBox.Visibility = Visibility.Hidden;
                 weekCalendar.Visibility = Visibility.Hidden;
-
-                visibility.ShowCalendar = Visibility.Hidden;
             }
 
             if (chartsMenu.IsChecked == true)
@@ -938,6 +955,70 @@ namespace ReSCat.View
                 DataBaseMenuVisibility();
             }
 
+        }
+
+        private void ModifyMenu_Click(object sender, RoutedEventArgs e)
+        {
+            dataBaseMenu.IsChecked = false;
+            logsMenu.IsChecked = false;
+            chartsMenu.IsChecked = false;
+            if ((bool)dataBaseMenu.IsChecked == false)
+            {
+                dataBaseView.ShowDataBaseMenu = Visibility.Hidden;
+
+                DataBaseMenuVisibility();
+
+                weekCalendarTextBox.Visibility = Visibility.Hidden;
+                weekCalendar.Visibility = Visibility.Hidden;
+            }
+
+            if (modifyMenu.IsChecked == true)
+            {
+                MainWindow.Content = new ModifyMenuView();
+            }
+            else if (modifyMenu.IsChecked == false)
+            {
+                MainWindow.Content = new UserControl();
+                dataBaseMenu.IsChecked = true;
+
+                dataBaseView.ShowDataBaseMenu = Visibility.Visible;
+
+                DataBaseMenuVisibility();
+            }
+        }
+
+        private void Minimize_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void Maximize_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Maximized)
+            {
+                mainFunctionalities.Maximize = "\uD83D\uDDD6";
+
+                this.WindowState = WindowState.Normal;
+            }
+            else
+            {
+                mainFunctionalities.Maximize = "\uD83D\uDDD7";
+
+                this.WindowState = WindowState.Maximized;
+            }
+            
+        }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show("Close the Application?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+            {
+                //After pressing No, currently no idea
+            }
+            else
+            {
+                Application.Current.Shutdown(); //Close app, saving is automatic so no msg needed?
+            }
         }
     }
 }

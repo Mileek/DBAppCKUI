@@ -9,23 +9,21 @@ using System.Windows;
 
 namespace ReSCat.ViewModel
 {
-    public class VisibilityCalendarViewModel : ObservableObject
+    public class DataGridViewModel : ObservableObject
     {
-        private Visibility showCalendar = Visibility.Hidden;
-        public Visibility ShowCalendar
+        private Visibility showDataBaseMenu = Visibility.Hidden;
+        public Visibility ShowDataBaseMenu
         {
             get
             {
-                return showCalendar;
+                return showDataBaseMenu;
             }
             set
-            {   
-                showCalendar = value;
+            {
+                showDataBaseMenu = value;
 
-                OnPropertyChanged();
-
+                //OnPropertyChanged("ShowDataBaseMenu");
             }
         }
     }
-
 }

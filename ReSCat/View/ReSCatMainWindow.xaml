@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         TextOptions.TextFormattingMode="Display"    
         TextOptions.TextRenderingMode="Auto" 
-        xmlns:local="clr-namespace:ReSCat" xmlns:viewmodel="clr-namespace:ReSCat.ViewModel" xmlns:model="clr-namespace:ReSCat.Model"
+        xmlns:local="clr-namespace:ReSCat" xmlns:viewmodel="clr-namespace:ReSCat.ViewModel" xmlns:model="clr-namespace:ReSCat.Model" d:DataContext="{d:DesignInstance Type=viewmodel:DataGridViewModel}"
         mc:Ignorable="d"
         Title="ReSCatMainWindow" Height="680" Width="1320" FontFamily="Arial" 
         WindowStyle="None"
@@ -13,9 +13,12 @@
         AllowsTransparency="True" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen"
         ResizeMode="CanResizeWithGrip"
         >
-   
 
-    <Border Background="#FF231A2B" BorderThickness="1" CornerRadius="25" MouseLeftButtonDown="DragnMove" >
+    <Window.DataContext>
+        <viewmodel:MainUIViewModel/>
+    </Window.DataContext>
+    
+    <Border Background="#FF231A2B" BorderThickness="1" CornerRadius="20" MouseLeftButtonDown="DragnMove" >
         <Border.BorderBrush>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                 <GradientStop Color="#F51D4C"/>
@@ -28,18 +31,18 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition MinHeight="500" Height="*" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <!--<RowDefinition Height="*" />-->
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="auto" />
                 <!--<ColumnDefinition Width="*" />-->
             </Grid.ColumnDefinitions>
@@ -77,7 +80,7 @@
             </Border>
 
             <!--Left Panel-->
-            <Border Grid.Column="0" Margin="10,0,10,0" CornerRadius="4" Background="#FF342244" Grid.Row="1" MinWidth="125" BorderThickness="1">
+            <Border Grid.Column="0" Margin="10,0,10,0" CornerRadius="4" Background="#FF342244" Grid.RowSpan="3" Grid.Row="1" MinWidth="125" BorderThickness="1">
                 <Border.BorderBrush>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <GradientStop Color="#F51D4C"/>
@@ -195,6 +198,9 @@
                     <ToggleButton Style="{StaticResource MenuButton}" IsChecked="False" Height="35" Margin="5"
                              FontSize="16" Foreground="White" x:Name="logsMenu" Content="Logs" Click="LogsMenu_Click"
                              />
+                    <ToggleButton Style="{StaticResource MenuButton}" IsChecked="False" Height="35" Margin="5"
+                             FontSize="16" Foreground="White" x:Name="modifyMenu" Content="Modify" Click="ModifyMenu_Click"
+                             />
                 </StackPanel>
             </Border>
             <StackPanel Grid.Column="0" Grid.RowSpan="4" Grid.Row="4">
@@ -214,8 +220,8 @@
 
             <!--Middle Panel-->
 
-            <DataGrid Style="{DynamicResource DataGridStyle}" d:DataContext="{d:DesignInstance Type=viewmodel:VisibilityDataBaseViewModel}"
-                      x:Name="MainDatabaseXAML" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3"  
+            <DataGrid Style="{DynamicResource DataGridStyle}" 
+                      x:Name="MainDatabaseXAML" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3"
                       Margin="10" HorizontalAlignment="Stretch" 
                       SelectionChanged="MainDatabaseXAML_SelectionChanged" CanUserDeleteRows="False" 
                       CanUserAddRows="False" VerticalAlignment="Top" 
@@ -225,8 +231,10 @@
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Auto"
                       MaxHeight="480"
-                      SnapsToDevicePixels="True" 
-                      Visibility="{Binding ShowDataBaseMenu}">
+                      SnapsToDevicePixels="True">
+                <DataGrid.DataContext>
+                    <viewmodel:DataGridViewModel/>
+                </DataGrid.DataContext>
                 <DataGrid.Columns>
                     <DataGridTextColumn Visibility="Hidden" Header="Unique Id" Binding="{Binding Id}"/>
                     <DataGridTextColumn Header="Planned Week" Binding="{Binding Planned_Week}"/>
@@ -252,8 +260,7 @@
 
             <!--Bottom Panel-->
             <StackPanel x:Name="labelInfoPanel"
-                Visibility="{Binding ShowDataBaseMenu}" d:DataContext="{d:DesignInstance Type=viewmodel:VisibilityDataBaseViewModel}"
-                        Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal">
+                        Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center">
                 <Label Content="Enter Planned Week" Margin="3,0,3,3" HorizontalContentAlignment="Center" Width="125" BorderThickness="1" Foreground="White" FontStretch="Normal">
                     <Label.BorderBrush>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -314,8 +321,7 @@
             </StackPanel>
 
             <StackPanel x:Name="typeDataBoxes"
-                Visibility="{Binding ShowDataBaseMenu}" d:DataContext="{d:DesignInstance Type=viewmodel:VisibilityDataBaseViewModel}"
-                        Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Stretch" Orientation="Horizontal">
+                        Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Stretch" Orientation="Horizontal" HorizontalAlignment="Center">
                 <TextBox  TextWrapping="Wrap" x:Name="TextElementPlannedWeek" MinWidth="100" 
                       Width="125" HorizontalAlignment="Left" Margin="3,0,3,3"
                       BorderThickness="1" Foreground="White"
@@ -350,8 +356,7 @@
 
 
             <StackPanel x:Name="modifyRecordsButtons"
-                Visibility="{Binding ShowDataBaseMenu}" d:DataContext="{d:DesignInstance Type=viewmodel:VisibilityDataBaseViewModel}"
-                        Orientation="Horizontal" Grid.Row="6" Grid.ColumnSpan="3" Grid.Column="1" HorizontalAlignment="Center">
+                        Orientation="Horizontal" Grid.Row="6" Grid.ColumnSpan="3" Grid.Column="1" Margin="0,0,0,15" VerticalAlignment="Stretch" HorizontalAlignment="Center">
                 <RadioButton Content="Add New Element" x:Name="AddElementToGrid" 
                              Margin="10,5,10,5" Height="25" Width="120"
                              Foreground="White"
@@ -440,10 +445,17 @@
             </StackPanel>
 
             <!--Right Panel-->
+            <Border Grid.Column="4" Grid.Row="0">
+                <DockPanel Height="30" Margin="0,5,20,0" VerticalAlignment="Top" HorizontalAlignment="Right" LastChildFill="True">
+                    <RadioButton Name="Minimize" FontSize="20" Content="&#x1f5d5;" Style="{StaticResource TopRight_BTN}" Click="Minimize_Click" />
+                    <RadioButton d:DataContext="{d:DesignInstance Type=viewmodel:MainUIViewModel}" Name="Maximize" FontSize="20" Margin="5" Content="{Binding Path=Maximize, Mode=TwoWay}" Style="{StaticResource TopRight_BTN}" Click="Maximize_Click"/>
+                    <RadioButton Name="Close" FontSize="20" Margin="0,5,0,0" FontWeight="SemiBold" Content="&#x2715;" Style="{StaticResource TopRight_BTN}" Click="Close_Click"/>                    
+                </DockPanel>
+            </Border>
             <StackPanel x:Name="extraFunctionButtons"
-                Visibility="{Binding ShowDataBaseMenu}" Grid.Column="4" Grid.Row="1" Height="30" 
+                        Grid.Column="4" Grid.Row="1" Height="30" 
                         HorizontalAlignment="Center" Orientation="Horizontal" VerticalAlignment="Top"
-                        d:DataContext="{d:DesignInstance Type=viewmodel:VisibilityDataBaseViewModel}">
+                        >
                 <RadioButton Content="Calendar" MinWidth="60" Foreground="White" 
                              Style="{StaticResource Functional_BTN}" Click="CalendarButton_Click"
                              />
@@ -457,15 +469,15 @@
             <Viewbox Height="200" Grid.Column="4" Grid.Row="1" 
                      Margin="0,40,0,0" VerticalAlignment="Top"
                      HorizontalAlignment="Left" >
-                <Calendar d:DataContext="{d:DesignInstance Type=viewmodel:VisibilityCalendarViewModel}"
+                <!--d:DataContext="{d:DesignInstance Type=viewmodel:VisibilityCalendarViewModel}"-->
+                <Calendar d:DataContext="{d:DesignInstance Type=viewmodel:MainUIViewModel}"
                     Grid.IsSharedSizeScope="True" Language="en-us"
                       Name="weekCalendar"
                       FirstDayOfWeek="Monday" MouseDoubleClick="WeekCalendar_MouseDoubleClick" 
-                      Visibility="{Binding ShowCalendar, UpdateSourceTrigger=PropertyChanged}"
+                      Visibility="{Binding ShowCalendar, Mode=TwoWay}"
                       BorderThickness="2"    
                       Background="LightGray" 
-                       ToolTip="Double-Click to show week."
-                    >
+                       ToolTip="Double-Click to show week.">
                     <Calendar.BorderBrush>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="#F51D4C" Offset="0"/>
@@ -480,7 +492,6 @@
                      x:Name="weekCalendarTextBox"
                      TextAlignment="Center"
                      VerticalContentAlignment="Center"
-                     d:DataContext="{d:DesignInstance Type=viewmodel:VisibilityCalendarViewModel}"
                      Visibility="{Binding ShowCalendar}"
                      IsReadOnly="True"/>
         </Grid>

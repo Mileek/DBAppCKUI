@@ -18,43 +18,43 @@ namespace ReSCat.Model
         {
             if (selectedTextToSearch == "Planned Week")
             {
-                var searchedElements = from el in mainScreenEntity.MainTables.ToList() where (Convert.ToString(el.Planned_Week).Contains(SearchItems)) orderby el.Planned_Week ascending select el;
+                var searchedElements = from element in mainScreenEntity.MainTables.ToList() where (Convert.ToString(element.Planned_Week).Contains(SearchItems)) orderby element.Planned_Week ascending select element;
                 return searchedElements.ToList();                
             }
             else if (selectedTextToSearch == "Actual Week")
             {
-                var searchedElements = from el in mainScreenEntity.MainTables.ToList() where (Convert.ToString(el.Actual_Week).Contains(SearchItems)) orderby el.Planned_Week ascending select el;
+                var searchedElements = from element in mainScreenEntity.MainTables.ToList() where (Convert.ToString(element.Actual_Week).Contains(SearchItems)) orderby element.Planned_Week ascending select element;
                 return searchedElements.ToList();                
 
             }
             else if (selectedTextToSearch == "Weight")
             {
-                var searchedElements = from el in mainScreenEntity.MainTables.ToList() where (Convert.ToString(el.Weight).Contains(SearchItems)) orderby el.Planned_Week ascending select el;
+                var searchedElements = from element in mainScreenEntity.MainTables.ToList() where (Convert.ToString(element.Weight).Contains(SearchItems)) orderby element.Planned_Week ascending select element;
                 return searchedElements.ToList();                
             }
             else if (selectedTextToSearch == "Order")
             {
-                var searchedElements = from el in mainScreenEntity.MainTables where (el.Order.Contains(SearchItems)) orderby el.Planned_Week ascending select el;
+                var searchedElements = from element in mainScreenEntity.MainTables where (element.Order.Contains(SearchItems)) orderby element.Planned_Week ascending select element;
                 return searchedElements.ToList();                
             }
             else if (selectedTextToSearch == "Client Name")
             {
-                var searchedElements = from el in mainScreenEntity.MainTables where (el.Client_Name.Contains(SearchItems)) orderby el.Planned_Week ascending select el;
+                var searchedElements = from element in mainScreenEntity.MainTables where (element.Client_Name.Contains(SearchItems)) orderby element.Planned_Week ascending select element;
                 return searchedElements.ToList();                
             }
             else if (selectedTextToSearch == "Name")
             {
-                var searchedElements = from el in mainScreenEntity.MainTables where (el.Name.Contains(SearchItems)) orderby el.Planned_Week ascending select el;
+                var searchedElements = from element in mainScreenEntity.MainTables where (element.Name.Contains(SearchItems)) orderby element.Planned_Week ascending select element;
                 return searchedElements.ToList();                
             }
             else if (selectedTextToSearch == "Hall")
             {
-                var searchedElements = from el in mainScreenEntity.MainTables.ToList() where (Convert.ToString(el.Hall).Contains(SearchItems)) orderby el.Planned_Week ascending select el;
+                var searchedElements = from element in mainScreenEntity.MainTables.ToList() where (Convert.ToString(element.Hall).Contains(SearchItems)) orderby element.Planned_Week ascending select element;
                 return searchedElements.ToList();
             }
             else if (selectedTextToSearch == "Quantity")
             {
-                var searchedElements = from el in mainScreenEntity.MainTables.ToList() where (Convert.ToString(el.Quantity).Contains(SearchItems)) orderby el.Planned_Week ascending select el;
+                var searchedElements = from element in mainScreenEntity.MainTables.ToList() where (Convert.ToString(element.Quantity).Contains(SearchItems)) orderby element.Planned_Week ascending select element;
                 return searchedElements.ToList();                
             }
             else

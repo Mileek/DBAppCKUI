@@ -19,6 +19,7 @@
           <Property Name="Hall" Type="varchar" MaxLength="150" />
           <Property Name="Quantity" Type="int" />
           <Property Name="IsFinished" Type="bit" />
+          <Property Name="Log" Type="varchar" MaxLength="150" />
         </EntityType>
         <EntityContainer Name="MainDataBaseModelStoreContainer">
           <EntitySet Name="MainTable" EntityType="Self.MainTable" Schema="dbo" store:Type="Tables" />
@@ -39,6 +40,7 @@
           <Property Name="Client_Name" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="Hall" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Log" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="Quantity" Type="Int32" />
           <Property Name="IsFinished" Type="Boolean" />
         </EntityType>
@@ -54,6 +56,7 @@
           <EntitySetMapping Name="MainTables">
             <EntityTypeMapping TypeName="MainDataBaseModel.MainTable">
               <MappingFragment StoreEntitySet="MainTable">
+                <ScalarProperty Name="Log" ColumnName="Log" />
                 <ScalarProperty Name="Hall" ColumnName="Hall" />
                 <ScalarProperty Name="IsFinished" ColumnName="IsFinished" />
                 <ScalarProperty Name="Id" ColumnName="Id" />

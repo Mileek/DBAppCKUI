@@ -34,6 +34,8 @@ public partial class MainTable
 
     public string Hall { get; set; }
 
+    public string Log { get; set; }
+
     public Nullable<int> Quantity { get; set; }
 
     public Nullable<bool> IsFinished { get; set; }
