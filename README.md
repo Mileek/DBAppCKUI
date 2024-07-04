@@ -229,8 +229,6 @@ Project Link: [https://github.com/Mileek/ReSCat](https://github.com/Mileek/ReSCa
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
-
 * [Tim Corey](https://www.iamtimcorey.com)
 * [Stack Overflow](https://stackoverflow.com)
 * [Entity Framework Tutorial](https://www.entityframeworktutorial.net)
